@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSponsorDto } from './dto/create-sponsor.dto';
 import { UpdateSponsorDto } from './dto/update-sponsor.dto';
+import { StrapiService } from '../strapi/strapi.service';
 
 @Injectable()
 export class SponsorService {
+  constructor(private readonly strapiService: StrapiService) {}
+
   create(createSponsorDto: CreateSponsorDto) {
-    return 'This action adds a new sponsor';
+    return this.strapiService.postData('sponsors', createSponsorDto);
   }
 
   findAll() {
-    return `This action returns all sponsor`;
+    return this.strapiService.getAllData('sponsors');
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} sponsor`;
+    return this.strapiService.getDataById('sponsors', id);
   }
 
   update(id: number, updateSponsorDto: UpdateSponsorDto) {
-    return `This action updates a #${id} sponsor`;
+    return this.strapiService.updateData(`sponsors/${id}`, updateSponsorDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} sponsor`;
+    return this.strapiService.deleteData(`sponsors/${id}`);
   }
 }

@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { StrapiService } from '../strapi/strapi.service';
 
 @Injectable()
 export class PlayerService {
+  constructor(private readonly strapiService: StrapiService) {}
+
   create(createPlayerDto: CreatePlayerDto) {
-    return 'This action adds a new player';
+    return this.strapiService.postData('players', createPlayerDto);
   }
 
   findAll() {
-    return `This action returns all player`;
+    return this.strapiService.getAllData('players');
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} player`;
+    return this.strapiService.getDataById('players', id);
   }
 
   update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+    return this.strapiService.updateData(`players/${id}`, updatePlayerDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} player`;
+    return this.strapiService.deleteData(`players/${id}`);
   }
 }

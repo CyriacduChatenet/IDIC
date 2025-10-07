@@ -8,22 +8,22 @@ export class UserService {
   constructor(private readonly strapiService: StrapiService) {}
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return this.strapiService.postData('users', createUserDto);
   }
 
   findAll() {
-    return this.strapiService.getData('users');
+    return this.strapiService.getAllData('users');
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.strapiService.getDataById('users', id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.strapiService.updateData(`users/${id}`, updateUserDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.strapiService.deleteData(`users/${id}`);
   }
 }

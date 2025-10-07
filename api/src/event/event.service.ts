@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { StrapiService } from 'src/strapi/strapi.service';
 
 @Injectable()
 export class EventService {
+  constructor(private readonly strapiService: StrapiService) {}
+
   create(createEventDto: CreateEventDto) {
-    return 'This action adds a new event';
+    return this.strapiService.postData('events', createEventDto);
   }
 
   findAll() {
-    return `This action returns all event`;
+    return this.strapiService.getAllData('events');
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} event`;
+    return this.strapiService.getDataById('events', id);
   }
 
   update(id: number, updateEventDto: UpdateEventDto) {
-    return `This action updates a #${id} event`;
+    return this.strapiService.updateData(`events/${id}`, updateEventDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} event`;
+    return this.strapiService.deleteData(`events/${id}`);
   }
 }

@@ -11,10 +11,44 @@ export class StrapiService {
     this.token = process.env.STRAPI_TOKEN;
   }
 
-  async getData(endpoint: string): Promise<any> {
+  async getAllData(endpoint: string): Promise<any> {
     const url = `${this.baseUrl}/${endpoint}`;
     const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
     const response = await this.httpService.get(url, { headers }).toPromise();
+    return response?.data;
+  }
+
+  async getDataById(endpoint: string, id: string | number): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}/${id}`;
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+    const response = await this.httpService.get(url, { headers }).toPromise();
+    return response?.data;
+  }
+
+  async postData(endpoint: string, data: any): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}`;
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+    const response = await this.httpService
+      .post(url, data, { headers })
+      .toPromise();
+    return response?.data;
+  }
+
+  async updateData(endpoint: string, data: any): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}`;
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+    const response = await this.httpService
+      .put(url, data, { headers })
+      .toPromise();
+    return response?.data;
+  }
+
+  async deleteData(endpoint: string): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}`;
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+    const response = await this.httpService
+      .delete(url, { headers })
+      .toPromise();
     return response?.data;
   }
 }
