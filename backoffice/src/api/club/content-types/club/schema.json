@@ -11,13 +11,9 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "logo": {
       "type": "media",
@@ -29,14 +25,9 @@
         "audios"
       ]
     },
-    "phone_number": {
-      "type": "string"
-    },
-    "players": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::player.player",
-      "inversedBy": "clubs"
+    "phone": {
+      "type": "integer",
+      "required": true
     },
     "events": {
       "type": "relation",
@@ -44,8 +35,11 @@
       "target": "api::event.event",
       "mappedBy": "club"
     },
-    "adress": {
-      "type": "string"
+    "players": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::player.player",
+      "inversedBy": "clubs"
     }
   }
 }

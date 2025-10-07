@@ -11,31 +11,41 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "birth_date": {
-      "type": "date"
+    "last_name": {
+      "type": "string",
+      "required": true
     },
-    "phone_number": {
-      "type": "string"
+    "first_name": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "integer",
+      "required": true
     },
     "adress": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
+    "birth_date": {
+      "type": "date",
+      "required": true
+    },
+    "profile_picture": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
     "clubs": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::club.club",
       "mappedBy": "players"
-    },
-    "tickets": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::ticket.ticket",
-      "mappedBy": "player"
     }
   }
 }

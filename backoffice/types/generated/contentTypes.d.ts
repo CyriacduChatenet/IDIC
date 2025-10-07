@@ -430,35 +430,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiAboutAbout extends Struct.SingleTypeSchema {
-  collectionName: 'abouts';
-  info: {
-    description: 'Write about yourself and the content you create';
-    displayName: 'About';
-    pluralName: 'abouts';
-    singularName: 'about';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    blocks: Schema.Attribute.DynamicZone<
-      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiClubClub extends Struct.CollectionTypeSchema {
   collectionName: 'clubs';
   info: {
@@ -470,7 +441,6 @@ export interface ApiClubClub extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    adress: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -479,17 +449,47 @@ export interface ApiClubClub extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::club.club'> &
       Schema.Attribute.Private;
     logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    name: Schema.Attribute.String;
-    phone_number: Schema.Attribute.String;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.Integer & Schema.Attribute.Required;
     players: Schema.Attribute.Relation<'manyToMany', 'api::player.player'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
+  };
+}
+
+export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
+  collectionName: 'customers';
+  info: {
+    displayName: 'Customer';
+    pluralName: 'customers';
+    singularName: 'customer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    club: Schema.Attribute.Relation<'oneToOne', 'api::club.club'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    is_club: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    is_player: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    is_sponsor: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::customer.customer'
+    > &
+      Schema.Attribute.Private;
+    player: Schema.Attribute.Relation<'oneToOne', 'api::player.player'>;
+    publishedAt: Schema.Attribute.DateTime;
+    sponsor: Schema.Attribute.Relation<'oneToOne', 'api::sponsor.sponsor'>;
+    tickets: Schema.Attribute.Relation<'oneToMany', 'api::ticket.ticket'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -509,50 +509,18 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime;
+    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::event.event'> &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     pictures: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
     publishedAt: Schema.Attribute.DateTime;
     sponsors: Schema.Attribute.Relation<'manyToMany', 'api::sponsor.sponsor'>;
-    tickets: Schema.Attribute.Relation<'oneToMany', 'api::ticket.ticket'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
-  collectionName: 'globals';
-  info: {
-    description: 'Define global settings';
-    displayName: 'Global';
-    pluralName: 'globals';
-    singularName: 'global';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
-    favicon: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::global.global'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    siteDescription: Schema.Attribute.Text & Schema.Attribute.Required;
-    siteName: Schema.Attribute.String & Schema.Attribute.Required;
+    tickets: Schema.Attribute.Relation<'manyToMany', 'api::ticket.ticket'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -570,28 +538,28 @@ export interface ApiPlayerPlayer extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    adress: Schema.Attribute.String;
-    birth_date: Schema.Attribute.Date;
+    adress: Schema.Attribute.String & Schema.Attribute.Required;
+    birth_date: Schema.Attribute.Date & Schema.Attribute.Required;
     clubs: Schema.Attribute.Relation<'manyToMany', 'api::club.club'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    first_name: Schema.Attribute.String & Schema.Attribute.Required;
+    last_name: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::player.player'
     > &
       Schema.Attribute.Private;
-    phone_number: Schema.Attribute.String;
+    phone: Schema.Attribute.Integer & Schema.Attribute.Required;
+    profile_picture: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     publishedAt: Schema.Attribute.DateTime;
-    tickets: Schema.Attribute.Relation<'oneToMany', 'api::ticket.ticket'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
   };
 }
 
@@ -606,12 +574,10 @@ export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    adress: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.RichText;
-    email: Schema.Attribute.Email;
+    description: Schema.Attribute.RichText & Schema.Attribute.Required;
     events: Schema.Attribute.Relation<'manyToMany', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -620,7 +586,7 @@ export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    name: Schema.Attribute.String;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -642,20 +608,19 @@ export interface ApiTicketTicket extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
+    customer: Schema.Attribute.Relation<'manyToOne', 'api::customer.customer'>;
+    events: Schema.Attribute.Relation<'manyToMany', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::ticket.ticket'
     > &
       Schema.Attribute.Private;
-    player: Schema.Attribute.Relation<'manyToOne', 'api::player.player'>;
     publishedAt: Schema.Attribute.DateTime;
-    qr_code: Schema.Attribute.String;
+    qr_code: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    validate: Schema.Attribute.Boolean;
   };
 }
 
@@ -1117,20 +1082,17 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    club: Schema.Attribute.Relation<'oneToOne', 'api::club.club'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    customer: Schema.Attribute.Relation<'oneToOne', 'api::customer.customer'>;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    is_club: Schema.Attribute.Boolean;
-    is_player: Schema.Attribute.Boolean;
-    is_sponsor: Schema.Attribute.Boolean;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1142,7 +1104,6 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    player: Schema.Attribute.Relation<'oneToOne', 'api::player.player'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1150,7 +1111,6 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    sponsor: Schema.Attribute.Relation<'oneToOne', 'api::sponsor.sponsor'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1174,10 +1134,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::about.about': ApiAboutAbout;
       'api::club.club': ApiClubClub;
+      'api::customer.customer': ApiCustomerCustomer;
       'api::event.event': ApiEventEvent;
-      'api::global.global': ApiGlobalGlobal;
       'api::player.player': ApiPlayerPlayer;
       'api::sponsor.sponsor': ApiSponsorSponsor;
       'api::ticket.ticket': ApiTicketTicket;

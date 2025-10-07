@@ -11,26 +11,13 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "club": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::club.club",
-      "inversedBy": "events"
-    },
-    "tickets": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::ticket.ticket",
-      "mappedBy": "event"
-    },
-    "sponsors": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::sponsor.sponsor",
-      "inversedBy": "events"
-    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
     },
     "pictures": {
       "type": "media",
@@ -52,8 +39,23 @@
         "audios"
       ]
     },
-    "date": {
-      "type": "datetime"
+    "club": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::club.club",
+      "inversedBy": "events"
+    },
+    "tickets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::ticket.ticket",
+      "inversedBy": "events"
+    },
+    "sponsors": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sponsor.sponsor",
+      "inversedBy": "events"
     }
   }
 }

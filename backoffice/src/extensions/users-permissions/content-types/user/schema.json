@@ -66,59 +66,10 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "is_sponsor": {
-      "type": "boolean"
-    },
-    "is_player": {
-      "type": "boolean"
-    },
-    "is_club": {
-      "type": "boolean"
-    },
-    "player": {
+    "customer": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::player.player",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "is_player"
-            },
-            true
-          ]
-        }
-      }
-    },
-    "club": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::club.club",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "is_club"
-            },
-            true
-          ]
-        }
-      }
-    },
-    "sponsor": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::sponsor.sponsor",
-      "conditions": {
-        "visible": {
-          "==": [
-            {
-              "var": "is_sponsor"
-            },
-            true
-          ]
-        }
-      }
+      "target": "api::customer.customer"
     }
   }
 }

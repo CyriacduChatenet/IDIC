@@ -11,23 +11,21 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "event": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::event.event",
-      "inversedBy": "tickets"
-    },
-    "player": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::player.player",
-      "inversedBy": "tickets"
-    },
     "qr_code": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
-    "validate": {
-      "type": "boolean"
+    "customer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::customer.customer",
+      "inversedBy": "tickets"
+    },
+    "events": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::event.event",
+      "mappedBy": "tickets"
     }
   }
 }

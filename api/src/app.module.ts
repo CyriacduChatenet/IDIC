@@ -4,12 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { PlayerModule } from './player/player.module';
 import { ClubModule } from './club/club.module';
 import { SponsorModule } from './sponsor/sponsor.module';
 import { TicketModule } from './ticket/ticket.module';
 import { EventModule } from './event/event.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -17,12 +17,12 @@ import { EventModule } from './event/event.module';
       isGlobal: true,
     }),
     HttpModule,
-    UserModule,
     PlayerModule,
     ClubModule,
     SponsorModule,
     TicketModule,
     EventModule,
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

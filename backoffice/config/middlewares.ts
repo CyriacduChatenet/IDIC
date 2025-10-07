@@ -9,11 +9,4 @@ export default [
   'strapi::session',
   'strapi::favicon',
   'strapi::public',
-  {
-    name: 'strapi::cors',
-    config: {
-      origin: ['http://localhost:8000', 'http://localhost:5000'], // URL de ton front ou NestJS
-      headers: ['Content-Type', 'Authorization'],
-    },
-  },
 ];
