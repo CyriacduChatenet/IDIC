@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "players",
+  "info": {
+    "singularName": "player",
+    "pluralName": "players",
+    "displayName": "Player"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "birth_date": {
+      "type": "date"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "adress": {
+      "type": "string"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "clubs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::club.club",
+      "mappedBy": "players"
+    },
+    "tickets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ticket.ticket",
+      "mappedBy": "player"
+    }
+  }
+}

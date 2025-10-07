@@ -1,0 +1,124 @@
+{
+  "kind": "collectionType",
+  "collectionName": "up_users",
+  "info": {
+    "name": "user",
+    "description": "",
+    "singularName": "user",
+    "pluralName": "users",
+    "displayName": "User"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "username": {
+      "type": "string",
+      "minLength": 3,
+      "unique": true,
+      "configurable": false,
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "minLength": 6,
+      "configurable": false,
+      "required": true
+    },
+    "provider": {
+      "type": "string",
+      "configurable": false
+    },
+    "password": {
+      "type": "password",
+      "minLength": 6,
+      "configurable": false,
+      "private": true,
+      "searchable": false
+    },
+    "resetPasswordToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true,
+      "searchable": false
+    },
+    "confirmationToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true,
+      "searchable": false
+    },
+    "confirmed": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "blocked": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "role": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.role",
+      "inversedBy": "users",
+      "configurable": false
+    },
+    "is_sponsor": {
+      "type": "boolean"
+    },
+    "is_player": {
+      "type": "boolean"
+    },
+    "is_club": {
+      "type": "boolean"
+    },
+    "player": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::player.player",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "is_player"
+            },
+            true
+          ]
+        }
+      }
+    },
+    "club": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::club.club",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "is_club"
+            },
+            true
+          ]
+        }
+      }
+    },
+    "sponsor": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::sponsor.sponsor",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "is_sponsor"
+            },
+            true
+          ]
+        }
+      }
+    }
+  }
+}
