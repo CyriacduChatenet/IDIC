@@ -11,8 +11,8 @@ export class StrapiService {
     this.token = process.env.STRAPI_TOKEN;
   }
 
-  async getAllData(endpoint: string): Promise<any> {
-    const url = `${this.baseUrl}/${endpoint}`;
+  async getAllData(endpoint: string, populate?: string): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}?${populate ? `populate=${populate}` : ''}`;
     const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
     const response = await this.httpService.get(url, { headers }).toPromise();
     return response?.data;

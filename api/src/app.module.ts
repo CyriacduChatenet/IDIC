@@ -10,6 +10,8 @@ import { SponsorModule } from './sponsor/sponsor.module';
 import { TicketModule } from './ticket/ticket.module';
 import { EventModule } from './event/event.module';
 import { CustomerModule } from './customer/customer.module';
+import { UserModule } from './user/user.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { CustomerModule } from './customer/customer.module';
     TicketModule,
     EventModule,
     CustomerModule,
+    UserModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
