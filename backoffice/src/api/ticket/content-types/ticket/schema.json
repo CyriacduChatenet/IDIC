@@ -21,10 +21,10 @@
       "target": "api::customer.customer",
       "inversedBy": "tickets"
     },
-    "events": {
+    "teams": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::event.event",
+      "target": "api::team.team",
       "mappedBy": "tickets"
     }
   }

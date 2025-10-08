@@ -45,11 +45,11 @@
       "target": "api::club.club",
       "inversedBy": "events"
     },
-    "tickets": {
+    "teams": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::ticket.ticket",
-      "inversedBy": "events"
+      "target": "api::team.team",
+      "mappedBy": "events"
     },
     "sponsors": {
       "type": "relation",

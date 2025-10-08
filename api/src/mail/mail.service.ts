@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
@@ -10,42 +10,59 @@ export class MailService {
   ) {}
 
   public async sendSignupMail(reciever: string) {
-    await this.mailerService.sendMail({
-      to: reciever,
-      from: this.configService.get('MAILER_EMAIL'),
-      subject: 'Welcome to Travel Tailor',
-      template: 'signup',
-      context: {
-        reciever,
-        url: this.configService.get<string>('CLIENT_APP_URL'),
-      },
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: reciever,
+        from: this.configService.get('MAILER_EMAIL'),
+        subject: 'Welcome to Travel Tailor',
+        template: 'signup',
+        context: {
+          reciever,
+          url: this.configService.get<string>('CLIENT_APP_URL'),
+        },
+      });
+    } catch (error) {
+      console.error('Error sending signup email:', error);
+      throw new BadGatewayException('Failed to send signup email');
+    }
   }
 
   public async sendForgotPasswordMail(reciever: string, resetLink: string) {
-    await this.mailerService.sendMail({
-      to: reciever,
-      from: this.configService.get('MAILER_EMAIL'),
-      subject: 'Reset password demand',
-      template: 'forgot-password',
-      context: {
-        resetLink,
-        reciever,
-        url: this.configService.get<string>('CLIENT_APP_URL'),
-      },
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: reciever,
+        from: this.configService.get('MAILER_EMAIL'),
+        subject: 'Reset password demand',
+        template: 'forgot-password',
+        context: {
+          resetLink,
+          reciever,
+          url: this.configService.get<string>('CLIENT_APP_URL'),
+        },
+      });
+    } catch (error) {
+      console.error('Error sending forgot password email:', error);
+      throw new BadGatewayException('Failed to send forgot password email');
+    }
   }
 
   public async sendConfirmResetPasswordMail(reciever: string) {
-    await this.mailerService.sendMail({
-      to: reciever,
-      from: this.configService.get('MAILER_EMAIL'),
-      subject: 'Your password has been reset',
-      template: 'reset-password',
-      context: {
-        reciever,
-        url: this.configService.get<string>('CLIENT_APP_URL'),
-      },
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: reciever,
+        from: this.configService.get('MAILER_EMAIL'),
+        subject: 'Your password has been reset',
+        template: 'reset-password',
+        context: {
+          reciever,
+          url: this.configService.get<string>('CLIENT_APP_URL'),
+        },
+      });
+    } catch (error) {
+      console.error('Error sending confirm reset password email:', error);
+      throw new BadGatewayException(
+        'Failed to send confirm reset password email',
+      );
+    }
   }
 }
