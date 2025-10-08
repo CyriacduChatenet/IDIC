@@ -12,6 +12,7 @@ import { EventModule } from './event/event.module';
 import { CustomerModule } from './customer/customer.module';
 import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MailModule } from './mail/mail.module';
     CustomerModule,
     UserModule,
     MailModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
