@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { StrapiService } from '../strapi/strapi.service';
@@ -6,23 +10,55 @@ import { StrapiService } from '../strapi/strapi.service';
 @Injectable()
 export class UserService {
   constructor(private readonly strapiService: StrapiService) {}
+
   create(createUserDto: CreateUserDto) {
-    return this.strapiService.postData('users', createUserDto);
+    try {
+      return this.strapiService.postData('users', createUserDto);
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw new ForbiddenException(
+        'You do not have permission to create a user',
+      );
+    }
   }
 
   findAll() {
-    return this.strapiService.getAllData('users', '*');
+    try {
+      return this.strapiService.getAllData('users', '*');
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw new NotFoundException('No users found');
+    }
   }
 
   findOne(id: number) {
-    return this.strapiService.getDataById('users', id);
+    try {
+      return this.strapiService.getDataById('users', id);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return this.strapiService.updateData(`users/${id}`, updateUserDto);
+    try {
+      return this.strapiService.updateData(`users/${id}`, updateUserDto);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw new ForbiddenException(
+        `You do not have permission to update user with ID ${id}`,
+      );
+    }
   }
 
   remove(id: number) {
-    return this.strapiService.deleteData(`users/${id}`);
+    try {
+      return this.strapiService.deleteData(`users/${id}`);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw new ForbiddenException(
+        `You do not have permission to delete user with ID ${id}`,
+      );
+    }
   }
 }

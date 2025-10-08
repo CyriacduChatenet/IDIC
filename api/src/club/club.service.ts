@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
 import { StrapiService } from '../strapi/strapi.service';
@@ -8,22 +12,49 @@ export class ClubService {
   constructor(private readonly strapiService: StrapiService) {}
 
   create(createClubDto: CreateClubDto) {
-    return this.strapiService.postData('clubs', createClubDto);
+    try {
+      return this.strapiService.postData('clubs', createClubDto);
+    } catch (error) {
+      console.error('Error creating club:', error);
+      throw new ForbiddenException(
+        'You do not have permission to create a club',
+      );
+    }
   }
 
   findAll() {
-    return this.strapiService.getAllData('clubs');
+    try {
+      return this.strapiService.getAllData('clubs');
+    } catch (error) {
+      console.error('Error fetching clubs:', error);
+      throw new NotFoundException('No clubs found');
+    }
   }
 
   findOne(id: number) {
-    return this.strapiService.getDataById('clubs', id);
+    try {
+      return this.strapiService.getDataById('clubs', id);
+    } catch (error) {
+      console.error('Error fetching club:', error);
+      throw new NotFoundException(`Club with ID ${id} not found`);
+    }
   }
 
   update(id: number, updateClubDto: UpdateClubDto) {
-    return this.strapiService.updateData(`clubs/${id}`, updateClubDto);
+    try {
+      return this.strapiService.updateData(`clubs/${id}`, updateClubDto);
+    } catch (error) {
+      console.error('Error updating club:', error);
+      throw new ForbiddenException(`Club with ID ${id} not found`);
+    }
   }
 
   remove(id: number) {
-    return this.strapiService.deleteData(`clubs/${id}`);
+    try {
+      return this.strapiService.deleteData(`clubs/${id}`);
+    } catch (error) {
+      console.error('Error deleting club:', error);
+      throw new ForbiddenException(`Club with ID ${id} not found`);
+    }
   }
 }
