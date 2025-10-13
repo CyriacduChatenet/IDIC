@@ -11,41 +11,8 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "last_name": {
-      "type": "string",
-      "required": true
-    },
-    "first_name": {
-      "type": "string",
-      "required": true
-    },
-    "phone": {
-      "type": "integer",
-      "required": true
-    },
-    "adress": {
-      "type": "string",
-      "required": true
-    },
-    "birth_date": {
-      "type": "date",
-      "required": true
-    },
-    "profile_picture": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "clubs": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::club.club",
-      "mappedBy": "players"
+    "firstname": {
+      "type": "string"
     }
   }
 }

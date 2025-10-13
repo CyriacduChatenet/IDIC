@@ -25,6 +25,17 @@ export class StrapiService {
     return response?.data;
   }
 
+  async getDataByField(
+    endpoint: string,
+    field: string,
+    value: string,
+  ): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}?filters[${field}][$eq]=${value}`;
+    const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+    const response = await this.httpService.get(url, { headers }).toPromise();
+    return response?.data;
+  }
+
   async postData(endpoint: string, data: any): Promise<any> {
     const url = `${this.baseUrl}/${endpoint}`;
     const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};

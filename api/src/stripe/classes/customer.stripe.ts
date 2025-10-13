@@ -22,7 +22,7 @@ export class CustomerStripe {
 
   public updateCustomer(
     customerId: string,
-    updates: { email?: string; name?: string },
+    updates: { email?: string; name?: string; stripe_customer_id?: string },
   ) {
     const stripeInstance = this.stripe.getStripeInstance();
     return stripeInstance.customers.update(customerId, updates);

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { IntentStripe } from './classes/intent.stripe';
 
 @Injectable()
