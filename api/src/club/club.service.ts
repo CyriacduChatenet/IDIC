@@ -25,7 +25,7 @@ export class ClubService {
 
   findAll() {
     try {
-      return this.strapiService.getAllData('clubs');
+      return this.strapiService.getAllData('clubs', '*');
     } catch (err) {
       console.error('Error fetching clubs:', err);
       throw new NotFoundException(`No STRAPI_CLUBS found`);
@@ -34,9 +34,9 @@ export class ClubService {
 
   findOne(id: string) {
     try {
-      return this.strapiService.getDataById(`clubs/${id}`);
+      return this.strapiService.getDataById(`clubs/${id}`, '*');
     } catch (err) {
-      console.error('Error fetching user:', err);
+      console.error('Error fetching club:', err);
       throw new NotFoundException(`STRAPI_CLUB with ID ${id} not found`);
     }
   }

@@ -32,6 +32,15 @@
     "address": {
       "type": "string",
       "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "events": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event.event"
     }
   }
 }

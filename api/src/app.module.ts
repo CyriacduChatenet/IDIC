@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { PlayerModule } from './player/player.module';
 import { ClubModule } from './club/club.module';
 import { SponsorModule } from './sponsor/sponsor.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SponsorModule } from './sponsor/sponsor.module';
     PlayerModule,
     ClubModule,
     SponsorModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

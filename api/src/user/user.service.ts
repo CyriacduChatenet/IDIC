@@ -73,6 +73,7 @@ export class UserService {
             name: createUserDto.first_name ?? '',
             address: createUserDto.address ?? '',
             phone: createUserDto.phone ?? '',
+            email: createUserDto.email ?? '',
           })) as { data: Club };
 
           const updatedStrapiUserClub = (await this.update(strapiUser.id, {
