@@ -12,6 +12,7 @@ import { PlayerModule } from './player/player.module';
 import { ClubModule } from './club/club.module';
 import { SponsorModule } from './sponsor/sponsor.module';
 import { EventModule } from './event/event.module';
+import { TicketModule } from './ticket/ticket.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { EventModule } from './event/event.module';
     ClubModule,
     SponsorModule,
     EventModule,
+    TicketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
