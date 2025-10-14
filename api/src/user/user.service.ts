@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   BadRequestException,
   ForbiddenException,
@@ -15,13 +12,24 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { StrapiService } from '../strapi/strapi.service';
+import { User } from './entity/user.entity';
 import { CustomerStripe } from '../stripe/classes/customer.stripe';
+import { Role } from '../config/enum/role.enum';
+import { PlayerService } from '../player/player.service';
+import { Player } from '../player/entity/player.entity';
+import { ClubService } from '../club/club.service';
+import { Club } from 'src/club/entities/club.entity';
+import { SponsorService } from 'src/sponsor/sponsor.service';
+import { Sponsor } from 'src/sponsor/entities/sponsor.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly strapiService: StrapiService,
-    private readonly stripeCustomer: CustomerStripe,
+    private readonly customerStripeService: CustomerStripe,
+    private readonly playerService: PlayerService,
+    private readonly clubService: ClubService,
+    private readonly sponsorService: SponsorService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -29,43 +37,72 @@ export class UserService {
       const strapiUser = (await this.strapiService.postData(
         'users',
         createUserDto,
-      )) as CreateUserDto;
+      )) as User;
 
-      if (!strapiUser || !strapiUser.username) {
-        throw new BadRequestException('Failed to create user in Strapi');
-      }
-
-      const stripeCustomer = await this.stripeCustomer.createCustomer(
+      const stripeCustomer = await this.customerStripeService.createCustomer(
         strapiUser.email,
         strapiUser.username,
       );
 
-      if (!stripeCustomer || !stripeCustomer.id) {
-        throw new BadRequestException('Failed to create customer in Stripe');
-      }
-
-      const updatedStrapiUser: {
-        username: string;
-        email: string;
-        id: number;
-        stripe_customer_id?: string;
-      } = await this.strapiService.updateData(`users/${strapiUser.id}`, {
-        stripe_customer_id: stripeCustomer.id,
-      });
-
-      if (!updatedStrapiUser || !updatedStrapiUser.stripe_customer_id) {
+      if (!stripeCustomer) {
         throw new BadRequestException(
-          'Failed to update Strapi user with Stripe ID',
+          `Failed to create STRIPE_CUSTOMER with EMAIL ${strapiUser.email} and NAME ${strapiUser.username}`,
         );
       }
 
-      console.log('Strapi user updated with Stripe ID:', updatedStrapiUser);
+      switch (createUserDto.role) {
+        case Role.Player:
+          console.log('create player');
+          const newStrapiPlayer = (await this.playerService.create({
+            first_name: createUserDto.first_name ?? '',
+            last_name: createUserDto.last_name ?? '',
+            birth_date: createUserDto.birth_date ?? new Date(),
+            phone: createUserDto.phone ?? '',
+            address: createUserDto.address ?? '',
+          })) as { data: Player };
 
-      return updatedStrapiUser;
+          const updatedStrapiUserPlayer = (await this.update(strapiUser.id, {
+            stripe_customer_id: stripeCustomer.id,
+            player: `${newStrapiPlayer.data.id}`,
+          })) as User;
+
+          return { updatedStrapiUserPlayer, stripeCustomer };
+        case Role.Club:
+          console.log('create club');
+          const newStrapiClub = (await this.clubService.create({
+            name: createUserDto.first_name ?? '',
+            address: createUserDto.address ?? '',
+            phone: createUserDto.phone ?? '',
+          })) as { data: Club };
+
+          const updatedStrapiUserClub = (await this.update(strapiUser.id, {
+            stripe_customer_id: stripeCustomer.id,
+            club: `${newStrapiClub.data.id}`,
+          })) as User;
+
+          return { updatedStrapiUserClub, stripeCustomer };
+        case Role.Sponsor:
+          console.log('create sponsor');
+          const newStrapiSponsor = (await this.sponsorService.create({
+            name: createUserDto.name ?? '',
+            address: createUserDto.address ?? '',
+            phone: createUserDto.phone ?? '',
+            description: createUserDto.description ?? '',
+          })) as { data: Sponsor };
+
+          const updatedStrapiUserSponsor = (await this.update(strapiUser.id, {
+            stripe_customer_id: stripeCustomer.id,
+            sponsor: `${newStrapiSponsor.data.id}`,
+          })) as User;
+
+          return { updatedStrapiUserSponsor, stripeCustomer };
+        default:
+          throw new BadRequestException('USER_ROLE is not correct !');
+      }
     } catch (error) {
       console.error('Error creating user:', error);
       throw new ForbiddenException(
-        'You do not have permission to create a user',
+        'You do not have PERMISSION to create a STRAPI_USER',
       );
     }
   }
@@ -75,16 +112,16 @@ export class UserService {
       return this.strapiService.getAllData('users', '*');
     } catch (error) {
       console.error('Error fetching users:', error);
-      throw new NotFoundException('No users found');
+      throw new NotFoundException('No STRAPI_USERS found');
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
-      return this.strapiService.getDataById('users', id);
+      return this.strapiService.getDataById(`users/${id}`, '*');
     } catch (error) {
       console.error('Error fetching user:', error);
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`STRAPI_USER with ID ${id} not found`);
     }
   }
 
@@ -93,7 +130,7 @@ export class UserService {
       return this.strapiService.getDataByField('users', 'email', email);
     } catch (error) {
       console.error('Error fetching user by email:', error);
-      throw new NotFoundException(`User with email ${email} not found`);
+      throw new NotFoundException(`STRAPI_USER with EMAIL ${email} not found`);
     }
   }
 
@@ -103,41 +140,74 @@ export class UserService {
     } catch (error) {
       console.error('Error updating user:', error);
       throw new ForbiddenException(
-        `You do not have permission to update user with ID ${id}`,
+        `You do not have permission to update STRAPI_USER with ID ${id} and CREDENTIALS ${JSON.stringify(updateUserDto)}`,
       );
     }
   }
 
-  remove = async (id: number) => {
+  remove = async (id: string) => {
     try {
-      const user = await this.strapiService.getDataById('users', id);
+      const strapiUser = (await this.strapiService.getDataById(
+        `users/${id}`,
+        '*',
+      )) as User;
 
-      if (!user) {
-        throw new NotFoundException(`User with ID ${id} not found`);
-      }
-
-      const deletedStripeCustomer = await this.stripeCustomer.deleteCustomer(
-        user.stripe_customer_id,
+      const stripeCustomer = await this.customerStripeService.retrieveCustomer(
+        strapiUser.stripe_customer_id,
       );
 
-      if (!deletedStripeCustomer) {
-        throw new BadRequestException('Failed to delete customer in Stripe');
+      if (!stripeCustomer) {
+        throw new NotFoundException(
+          `STRIPE_CUSTOMER is not found with CUSTOMER_ID ${strapiUser.stripe_customer_id}`,
+        );
       }
 
-      const strapiCustomer = await this.strapiService.deleteData(`users/${id}`);
-
-      if (!strapiCustomer) {
-        throw new BadRequestException('Failed to delete user in Strapi');
+      if (strapiUser.stripe_customer_id === null) {
+        throw new BadRequestException(`STRIPE_CUSTOMER_ID is null`);
       }
 
-      return {
-        deletedStripeCustomer,
-        strapiCustomer,
-      };
+      if (strapiUser.player !== null) {
+        const strapiPlayer = (await this.playerService.findOne(
+          strapiUser.player.documentId,
+        )) as { data: Player };
+
+        await this.playerService.remove(strapiPlayer.data.documentId);
+        const deletedStrapiUser = await this.strapiService.deleteData(
+          `users/${strapiUser.id}`,
+        );
+
+        return { strapiPlayer, deletedStrapiUser };
+      } else if (strapiUser.club !== null) {
+        const strapiClub = (await this.clubService.findOne(
+          strapiUser.club.documentId,
+        )) as { data: Club };
+
+        await this.clubService.remove(strapiClub.data.documentId);
+        const deletedStrapiUser = await this.strapiService.deleteData(
+          `users/${strapiUser.id}`,
+        );
+
+        return { strapiClub, deletedStrapiUser };
+      } else if (strapiUser.sponsor !== null) {
+        const strapiSponsor = (await this.sponsorService.findOne(
+          strapiUser.sponsor.documentId,
+        )) as { data: Sponsor };
+
+        await this.sponsorService.remove(strapiSponsor.data.documentId);
+        const deletedStrapiUser = await this.strapiService.deleteData(
+          `users/${strapiUser.id}`,
+        );
+        return { strapiSponsor, deletedStrapiUser };
+      } else {
+        const deletedStrapiUser = await this.strapiService.deleteData(
+          `users/${strapiUser.id}`,
+        );
+        return deletedStrapiUser;
+      }
     } catch (error) {
       console.error('Error deleting user:', error);
       throw new ForbiddenException(
-        `You do not have permission to delete user with ID ${id}`,
+        `You do not have permission to delete STRAPI_USER with ID ${id}`,
       );
     }
   };

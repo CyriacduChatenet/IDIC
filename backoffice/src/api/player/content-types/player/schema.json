@@ -11,8 +11,25 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "firstname": {
-      "type": "string"
+    "first_name": {
+      "type": "string",
+      "required": true
+    },
+    "last_name": {
+      "type": "string",
+      "required": true
+    },
+    "birth_date": {
+      "type": "date",
+      "required": true
+    },
+    "address": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "biginteger",
+      "required": true
     }
   }
 }

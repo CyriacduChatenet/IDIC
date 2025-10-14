@@ -4,5 +4,7 @@ import { CreateUserDto } from './create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   stripe_customer_id?: string;
-  player?: number;
+  player?: string;
+  club?: string;
+  sponsor?: string;
 }

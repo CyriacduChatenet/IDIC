@@ -9,5 +9,6 @@ import { StrapiService } from '../strapi/strapi.service';
   imports: [HttpModule],
   controllers: [PlayerController],
   providers: [PlayerService, StrapiService],
+  exports: [PlayerService],
 })
 export class PlayerModule {}

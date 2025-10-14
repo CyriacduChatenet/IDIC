@@ -12,15 +12,16 @@ export class StrapiService {
   }
 
   async getAllData(endpoint: string, populate?: string): Promise<any> {
-    const url = `${this.baseUrl}/${endpoint}?${populate ? `populate=${populate}` : ''}`;
+    const url = `${this.baseUrl}/${endpoint}${populate ? `?populate=${populate}` : ''}`;
     const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
     const response = await this.httpService.get(url, { headers }).toPromise();
     return response?.data;
   }
 
-  async getDataById(endpoint: string, id: string | number): Promise<any> {
-    const url = `${this.baseUrl}/${endpoint}/${id}`;
+  async getDataById(endpoint: string, populate?: string): Promise<any> {
+    const url = `${this.baseUrl}/${endpoint}${populate ? `?populate=${populate}` : ''}`;
     const headers = this.token ? { Authorization: `Bearer ${this.token}` } : {};
+
     const response = await this.httpService.get(url, { headers }).toPromise();
     return response?.data;
   }

@@ -9,6 +9,8 @@ import { MailModule } from './mail/mail.module';
 import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from './auth/auth.module';
 import { PlayerModule } from './player/player.module';
+import { ClubModule } from './club/club.module';
+import { SponsorModule } from './sponsor/sponsor.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { PlayerModule } from './player/player.module';
     StripeModule,
     AuthModule,
     PlayerModule,
+    ClubModule,
+    SponsorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
