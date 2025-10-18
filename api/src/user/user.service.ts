@@ -1,6 +1,5 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   BadRequestException,
@@ -9,18 +8,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { StrapiService } from '../strapi/strapi.service';
 import { User } from './entity/user.entity';
 import { CustomerStripe } from '../stripe/classes/customer.stripe';
-import { Role } from '../config/enum/role.enum';
+import { Permission } from '../config/enum/permission.enum';
 import { PlayerService } from '../player/player.service';
 import { Player } from '../player/entity/player.entity';
 import { ClubService } from '../club/club.service';
 import { Club } from 'src/club/entities/club.entity';
 import { SponsorService } from 'src/sponsor/sponsor.service';
 import { Sponsor } from 'src/sponsor/entities/sponsor.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -50,8 +49,8 @@ export class UserService {
         );
       }
 
-      switch (createUserDto.role) {
-        case Role.Player:
+      switch (createUserDto.permission) {
+        case Permission.Player:
           console.log('create player');
           const newStrapiPlayer = (await this.playerService.create({
             first_name: createUserDto.first_name ?? '',
@@ -67,10 +66,10 @@ export class UserService {
           })) as User;
 
           return { updatedStrapiUserPlayer, stripeCustomer };
-        case Role.Club:
+        case Permission.Club:
           console.log('create club');
           const newStrapiClub = (await this.clubService.create({
-            name: createUserDto.first_name ?? '',
+            name: createUserDto.name ?? '',
             address: createUserDto.address ?? '',
             phone: createUserDto.phone ?? '',
             email: createUserDto.email ?? '',
@@ -82,7 +81,7 @@ export class UserService {
           })) as User;
 
           return { updatedStrapiUserClub, stripeCustomer };
-        case Role.Sponsor:
+        case Permission.Sponsor:
           console.log('create sponsor');
           const newStrapiSponsor = (await this.sponsorService.create({
             name: createUserDto.name ?? '',

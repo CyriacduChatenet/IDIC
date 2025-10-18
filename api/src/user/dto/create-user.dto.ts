@@ -1,4 +1,4 @@
-import { Role } from '../../config/enum/role.enum';
+import { Permission } from '../../config/enum/permission.enum';
 
 export class CreateUserDto {
   username: string;
@@ -6,12 +6,16 @@ export class CreateUserDto {
   password: string;
   confirmed: boolean;
   blocked: boolean;
-  role: Role;
-  first_name?: string;
-  last_name?: string;
-  birth_date?: Date;
-  address?: string;
-  phone?: string;
-  name?: string;
+  permission: Permission;
+
+  name: string;
+  address: string;
+  phone: string;
+  logo?: string;
+
+  first_name: string;
+  last_name: string;
+  birth_date: Date;
+
   description?: string;
 }

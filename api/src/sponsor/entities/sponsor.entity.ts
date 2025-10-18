@@ -1,3 +1,5 @@
+import { Event } from '../../event/entities/event.entity';
+
 export class Sponsor {
   id: number;
   documentId: string;
@@ -6,4 +8,5 @@ export class Sponsor {
   address: string;
   description: string;
   phone: string;
+  events: Event[];
 }

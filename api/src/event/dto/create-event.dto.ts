@@ -7,5 +7,6 @@ export class CreateEventDto {
   banner?: string;
   phone: string;
   email: string;
+  team_size: number;
   club: string;
 }

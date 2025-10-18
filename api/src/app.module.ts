@@ -7,12 +7,13 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MailModule } from './mail/mail.module';
 import { StripeModule } from './stripe/stripe.module';
-import { AuthModule } from './auth/auth.module';
 import { PlayerModule } from './player/player.module';
 import { ClubModule } from './club/club.module';
 import { SponsorModule } from './sponsor/sponsor.module';
 import { EventModule } from './event/event.module';
 import { TicketModule } from './ticket/ticket.module';
+import { TeamModule } from './team/team.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,12 +24,13 @@ import { TicketModule } from './ticket/ticket.module';
     UserModule,
     MailModule,
     StripeModule,
-    AuthModule,
     PlayerModule,
     ClubModule,
     SponsorModule,
     EventModule,
     TicketModule,
+    TeamModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,6 @@
 import { Sponsor } from '../../sponsor/entities/sponsor.entity';
 import { Club } from '../../club/entities/club.entity';
-import { Role } from '../../config/enum/role.enum';
+import { Permission } from '../../config/enum/permission.enum';
 import { Player } from '../../player/entity/player.entity';
 
 export class User {
@@ -14,7 +14,7 @@ export class User {
   confirmationToken: string;
   confirmed: boolean;
   blocked: boolean;
-  role: Role;
+  permission: Permission;
   player: Player;
   club: Club;
   sponsor: Sponsor;
