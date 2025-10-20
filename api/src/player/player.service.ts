@@ -7,12 +7,22 @@ import {
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { StrapiService } from '../strapi/strapi.service';
+import {
+  StrapiApiCreateResponse,
+  StrapiApiDeleteResponse,
+  StrapiApiFindAllResponse,
+  StrapiApiFindOneResponse,
+  StrapiApiUpdateResponse,
+} from 'src/config/interfaces/strapi-api-response.interface';
+import { Player } from './entity/player.entity';
 
 @Injectable()
 export class PlayerService {
   constructor(private readonly strapiService: StrapiService) {}
 
-  create(createPlayerDto: CreatePlayerDto) {
+  create(
+    createPlayerDto: CreatePlayerDto,
+  ): Promise<StrapiApiCreateResponse<Player>> {
     try {
       return this.strapiService.postData('players', { data: createPlayerDto });
     } catch (err) {
@@ -23,7 +33,7 @@ export class PlayerService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<StrapiApiFindAllResponse<Player>> {
     try {
       return this.strapiService.getAllData('players');
     } catch (err) {
@@ -32,7 +42,7 @@ export class PlayerService {
     }
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<StrapiApiFindOneResponse<Player>> {
     try {
       return this.strapiService.getDataById(`players/${id}`);
     } catch (err) {
@@ -41,7 +51,10 @@ export class PlayerService {
     }
   }
 
-  update(id: string, updatePlayerDto: UpdatePlayerDto) {
+  update(
+    id: string,
+    updatePlayerDto: UpdatePlayerDto,
+  ): Promise<StrapiApiUpdateResponse<Player>> {
     try {
       return this.strapiService.updateData(`players/${id}`, {
         data: updatePlayerDto,
@@ -54,9 +67,12 @@ export class PlayerService {
     }
   }
 
-  remove(id: string) {
+  async remove(id: string): Promise<StrapiApiDeleteResponse<Player>> {
     try {
-      return this.strapiService.deleteData(`players/${id}`);
+      const player = await this.findOne(id);
+      await this.strapiService.deleteData(`players/${id}`);
+
+      return { data: player.data };
     } catch (err) {
       console.error('Error deleting player:', err);
       throw new ForbiddenException(

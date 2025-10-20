@@ -11,6 +11,12 @@ import { StrapiService } from '../strapi/strapi.service';
 import { ClubService } from '../club/club.service';
 import { Club } from '../club/entities/club.entity';
 import { Event } from './entities/event.entity';
+import {
+  StrapiApiDeleteResponse,
+  StrapiApiFindAllResponse,
+  StrapiApiFindOneResponse,
+  StrapiApiUpdateResponse,
+} from '../config/interfaces/strapi-api-response.interface';
 
 @Injectable()
 export class EventService {
@@ -57,7 +63,7 @@ export class EventService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<StrapiApiFindAllResponse<Event>> {
     try {
       return this.strapiService.getAllData('events', '*');
     } catch (err) {
@@ -66,7 +72,7 @@ export class EventService {
     }
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<StrapiApiFindOneResponse<Event>> {
     try {
       return this.strapiService.getDataById(`events/${id}`, '*');
     } catch (err) {
@@ -75,7 +81,10 @@ export class EventService {
     }
   }
 
-  update(id: string, updateEventDto: UpdateEventDto) {
+  update(
+    id: string,
+    updateEventDto: UpdateEventDto,
+  ): Promise<StrapiApiUpdateResponse<Event>> {
     try {
       return this.strapiService.updateData(`events/${id}`, {
         data: updateEventDto,
@@ -88,7 +97,7 @@ export class EventService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<StrapiApiDeleteResponse<Event>> {
     try {
       const strapiEvent = (await this.findOne(id)) as { data: Event };
       const strapiEventClubId = strapiEvent.data.club.documentId;
@@ -105,7 +114,9 @@ export class EventService {
       await this.clubService.update(strapiClub.data.documentId, {
         events: strapiClubEventIds,
       });
-      return this.strapiService.deleteData(`events/${id}`);
+      await this.strapiService.deleteData(`events/${id}`);
+
+      return { data: strapiEvent.data };
     } catch (err) {
       console.error('Error deleting event:', err);
       throw new ForbiddenException(

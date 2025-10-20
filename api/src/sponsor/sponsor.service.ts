@@ -7,12 +7,22 @@ import {
 import { CreateSponsorDto } from './dto/create-sponsor.dto';
 import { UpdateSponsorDto } from './dto/update-sponsor.dto';
 import { StrapiService } from '../strapi/strapi.service';
+import {
+  StrapiApiCreateResponse,
+  StrapiApiDeleteResponse,
+  StrapiApiFindAllResponse,
+  StrapiApiFindOneResponse,
+  StrapiApiUpdateResponse,
+} from '../config/interfaces/strapi-api-response.interface';
+import { Sponsor } from './entities/sponsor.entity';
 
 @Injectable()
 export class SponsorService {
   constructor(private readonly strapiService: StrapiService) {}
 
-  create(createSponsorDto: CreateSponsorDto) {
+  create(
+    createSponsorDto: CreateSponsorDto,
+  ): Promise<StrapiApiCreateResponse<Sponsor>> {
     try {
       return this.strapiService.postData('sponsors', {
         data: createSponsorDto,
@@ -25,7 +35,7 @@ export class SponsorService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<StrapiApiFindAllResponse<Sponsor>> {
     try {
       return this.strapiService.getAllData('sponsors');
     } catch (err) {
@@ -34,7 +44,7 @@ export class SponsorService {
     }
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<StrapiApiFindOneResponse<Sponsor>> {
     try {
       return this.strapiService.getDataById(`sponsors/${id}`);
     } catch (err) {
@@ -43,7 +53,10 @@ export class SponsorService {
     }
   }
 
-  update(id: string, updateSponsorDto: UpdateSponsorDto) {
+  update(
+    id: string,
+    updateSponsorDto: UpdateSponsorDto,
+  ): Promise<StrapiApiUpdateResponse<Sponsor>> {
     try {
       return this.strapiService.updateData(`sponsors/${id}`, {
         data: updateSponsorDto,
@@ -56,9 +69,12 @@ export class SponsorService {
     }
   }
 
-  remove(id: string) {
+  async remove(id: string): Promise<StrapiApiDeleteResponse<Sponsor>> {
     try {
-      return this.strapiService.deleteData(`sponsors/${id}`);
+      const sponsor = await this.findOne(id);
+      await this.strapiService.deleteData(`sponsors/${id}`);
+
+      return { data: sponsor.data };
     } catch (err) {
       console.error('Error deleting sponsor:', err);
       throw new ForbiddenException(
