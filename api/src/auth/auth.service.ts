@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
 import { StrapiService } from '../strapi/strapi.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -27,7 +26,6 @@ export class AuthService {
   async register(
     registerDto: RegisterDto,
   ): Promise<StrapiApiCreateResponse<AuthDataResponse>> {
-    console.log(registerDto);
     try {
       const response = await this.strapiService.postData<AuthDataResponse>(
         'auth/local/register',
@@ -38,82 +36,29 @@ export class AuthService {
         },
       );
 
-      const jwt = response.jwt;
-      const strapiUser = response.user;
+      const { jwt, user: strapiUser } = response;
+      if (!jwt || !strapiUser) {
+        throw new BadRequestException('Invalid response from Strapi');
+      }
 
       const stripeCustomer = await this.customerStripeService.createCustomer(
         strapiUser.email,
         strapiUser.username,
       );
-
       if (!stripeCustomer) {
         throw new BadRequestException(
-          `Failed to create STRIPE_CUSTOMER with EMAIL ${strapiUser.email} and NAME ${strapiUser.username}`,
+          `Failed to create STRIPE_CUSTOMER for ${strapiUser.email}`,
         );
       }
 
-      switch (response.user.permission) {
-        case Permission.Player: {
-          console.log('create player');
-          const newStrapiPlayer = await this.playerService.create({
-            first_name: registerDto.first_name ?? '',
-            last_name: registerDto.last_name ?? '',
-            birth_date: registerDto.birth_date ?? new Date(),
-            phone: registerDto.phone ?? '',
-            address: registerDto.address ?? '',
-          });
+      const updatedUser = await this.createRoleEntityAndUpdateUser(
+        strapiUser.id,
+        registerDto,
+        strapiUser.permission,
+        stripeCustomer.id,
+      );
 
-          const updatedStrapiUserPlayer = await this.userService.update(
-            strapiUser.id,
-            {
-              stripe_customer_id: stripeCustomer.id,
-              player: `${newStrapiPlayer.data.id}`,
-            },
-          );
-
-          return { data: { jwt, user: updatedStrapiUserPlayer.data } };
-        }
-        case Permission.Club: {
-          console.log('create club');
-          const newStrapiClub = await this.clubService.create({
-            name: registerDto.name ?? '',
-            address: registerDto.address ?? '',
-            phone: registerDto.phone ?? '',
-            email: registerDto.email ?? '',
-          });
-
-          const updatedStrapiUserClub = await this.userService.update(
-            strapiUser.id,
-            {
-              stripe_customer_id: stripeCustomer.id,
-              club: `${newStrapiClub.data.id}`,
-            },
-          );
-
-          return { data: { jwt, user: updatedStrapiUserClub.data } };
-        }
-        case Permission.Sponsor: {
-          console.log('create sponsor');
-          const newStrapiSponsor = await this.sponsorService.create({
-            name: registerDto.name ?? '',
-            address: registerDto.address ?? '',
-            phone: registerDto.phone ?? '',
-            description: registerDto.description ?? '',
-          });
-
-          const updatedStrapiUserSponsor = await this.userService.update(
-            strapiUser.id,
-            {
-              stripe_customer_id: stripeCustomer.id,
-              sponsor: `${newStrapiSponsor.data.id}`,
-            },
-          );
-
-          return { data: { jwt, user: updatedStrapiUserSponsor.data } };
-        }
-        default:
-          throw new BadRequestException('USER_ROLE is not correct !');
-      }
+      return { data: { jwt, user: updatedUser } };
     } catch (err) {
       handleAxiosError(err, 'registering user');
     }
@@ -128,6 +73,64 @@ export class AuthService {
       >('auth/local', loginDto);
     } catch (err) {
       handleAxiosError(err, 'logging in user');
+    }
+  }
+
+  private async createRoleEntityAndUpdateUser(
+    userId: number,
+    dto: RegisterDto,
+    permission: Permission,
+    stripeCustomerId: string,
+  ) {
+    switch (permission) {
+      case Permission.Player: {
+        const player = await this.playerService.create({
+          first_name: dto.first_name ?? '',
+          last_name: dto.last_name ?? '',
+          birth_date: dto.birth_date ?? new Date(),
+          phone: dto.phone ?? '',
+          address: dto.address ?? '',
+        });
+
+        const updatedUser = await this.userService.update(userId, {
+          stripe_customer_id: stripeCustomerId,
+          player: `${player.data.id}`,
+        });
+        return updatedUser.data;
+      }
+
+      case Permission.Club: {
+        const club = await this.clubService.create({
+          name: dto.name ?? '',
+          address: dto.address ?? '',
+          phone: dto.phone ?? '',
+          email: dto.email ?? '',
+        });
+
+        const updatedUser = await this.userService.update(userId, {
+          stripe_customer_id: stripeCustomerId,
+          club: `${club.data.id}`,
+        });
+        return updatedUser.data;
+      }
+
+      case Permission.Sponsor: {
+        const sponsor = await this.sponsorService.create({
+          name: dto.name ?? '',
+          address: dto.address ?? '',
+          phone: dto.phone ?? '',
+          description: dto.description ?? '',
+        });
+
+        const updatedUser = await this.userService.update(userId, {
+          stripe_customer_id: stripeCustomerId,
+          sponsor: `${sponsor.data.id}`,
+        });
+        return updatedUser.data;
+      }
+
+      default:
+        throw new BadRequestException('USER_ROLE is not correct!');
     }
   }
 }
