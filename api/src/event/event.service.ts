@@ -14,7 +14,7 @@ import {
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
 } from '../strapi/interfaces/strapi-api-response.interface';
-import { handleAxiosError } from '../config/utils/axios-error.utils';
+import { handleAxiosError } from '../config/utils/axios-error.util';
 
 @Injectable()
 export class EventService {

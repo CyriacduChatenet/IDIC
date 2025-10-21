@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { handleAxiosError } from '../../config/utils/axios-error.utils';
+import { handleAxiosError } from '../../config/utils/axios-error.util';
 
 @Injectable()
 export class StrapiApiRequestRepository {

@@ -1,3 +1,4 @@
+import { handleStripeError } from '../utils/stripe-error.util';
 import { InitStripe } from './init-stripe.service';
 
 export class CustomerStripe {
@@ -7,34 +8,56 @@ export class CustomerStripe {
     this.stripe = new InitStripe();
   }
 
-  public createCustomer(email: string, name: string) {
-    const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.customers.create({
-      email,
-      name,
-    });
+  // 🔹 Créer un client
+  async createCustomer(email: string, name: string) {
+    try {
+      const stripeInstance = this.stripe.getStripeInstance();
+      return await stripeInstance.customers.create({ email, name });
+    } catch (err) {
+      handleStripeError(err, 'creating customer');
+    }
   }
 
-  public retrieveCustomer(customerId: string) {
-    const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.customers.retrieve(customerId);
+  // 🔹 Récupérer un client
+  async retrieveCustomer(customerId: string) {
+    try {
+      const stripeInstance = this.stripe.getStripeInstance();
+      return await stripeInstance.customers.retrieve(customerId);
+    } catch (err) {
+      handleStripeError(err, `retrieving customer ${customerId}`);
+    }
   }
 
-  public updateCustomer(
+  // 🔹 Mettre à jour un client
+  async updateCustomer(
     customerId: string,
     updates: { email?: string; name?: string; stripe_customer_id?: string },
   ) {
-    const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.customers.update(customerId, updates);
+    try {
+      const stripeInstance = this.stripe.getStripeInstance();
+      return await stripeInstance.customers.update(customerId, updates);
+    } catch (err) {
+      handleStripeError(err, `updating customer ${customerId}`);
+    }
   }
 
-  public deleteCustomer(customerId: string) {
-    const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.customers.del(customerId);
+  // 🔹 Supprimer un client
+  async deleteCustomer(customerId: string) {
+    try {
+      const stripeInstance = this.stripe.getStripeInstance();
+      return await stripeInstance.customers.del(customerId);
+    } catch (err) {
+      handleStripeError(err, `deleting customer ${customerId}`);
+    }
   }
 
-  public listCustomers(limit: number = 10) {
-    const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.customers.list({ limit });
+  // 🔹 Lister les clients
+  async listCustomers(limit: number = 10) {
+    try {
+      const stripeInstance = this.stripe.getStripeInstance();
+      return await stripeInstance.customers.list({ limit });
+    } catch (err) {
+      handleStripeError(err, 'listing customers');
+    }
   }
 }

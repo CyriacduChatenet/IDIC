@@ -11,7 +11,7 @@ import {
   StrapiApiUpdateResponse,
 } from '../strapi/interfaces/strapi-api-response.interface';
 import { Sponsor } from './entities/sponsor.entity';
-import { handleAxiosError } from '../config/utils/axios-error.utils';
+import { handleAxiosError } from '../config/utils/axios-error.util';
 
 @Injectable()
 export class SponsorService {

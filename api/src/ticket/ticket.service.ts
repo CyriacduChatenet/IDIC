@@ -11,7 +11,7 @@ import {
   StrapiApiUpdateResponse,
 } from 'src/strapi/interfaces/strapi-api-response.interface';
 import { Ticket } from './entities/ticket.entity';
-import { handleAxiosError } from '../config/utils/axios-error.utils';
+import { handleAxiosError } from '../config/utils/axios-error.util';
 
 @Injectable()
 export class TicketService {

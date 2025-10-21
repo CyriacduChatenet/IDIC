@@ -4,7 +4,7 @@ import { StrapiService } from '../strapi/strapi.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { StrapiApiCreateResponse } from '../strapi/interfaces/strapi-api-response.interface';
-import { handleAxiosError } from '../config/utils/axios-error.utils';
+import { handleAxiosError } from '../config/utils/axios-error.util';
 import { AuthDataResponse } from './response/auth.response';
 
 @Injectable()

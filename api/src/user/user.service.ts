@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import {
   BadRequestException,
@@ -15,7 +16,7 @@ import { Player } from '../player/entity/player.entity';
 import { ClubService } from '../club/club.service';
 import { SponsorService } from '../sponsor/sponsor.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { handleAxiosError } from '../config/utils/axios-error.utils';
+import { handleAxiosError } from '../config/utils/axios-error.util';
 import {
   StrapiApiCreateResponse,
   StrapiApiDeleteResponse,
