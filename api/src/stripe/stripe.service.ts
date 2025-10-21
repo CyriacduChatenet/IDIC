@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { IntentStripe } from './services/intent-stripe.service';
+import { IntentStripeService } from './services/intent-stripe.service';
 
 @Injectable()
 export class StripeService {
-  constructor(private readonly intentStripe: IntentStripe) {}
+  constructor(private readonly intentStripeService: IntentStripeService) {}
 
   createPaymentIntent(amount: number, currency: string) {
-    return this.intentStripe.createPaymentIntent(amount, currency);
+    return this.intentStripeService.createPaymentIntent(amount, currency);
   }
 }

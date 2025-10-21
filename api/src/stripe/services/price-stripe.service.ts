@@ -1,10 +1,10 @@
-import { InitStripe } from './init-stripe.service';
+import { InitStripeService } from './init-stripe.service';
 
-export class PriceStripe {
-  private stripe: InitStripe;
+export class PriceStripeService {
+  private stripe: InitStripeService;
 
   constructor() {
-    this.stripe = new InitStripe();
+    this.stripe = new InitStripeService();
   }
 
   public createPrice = async (

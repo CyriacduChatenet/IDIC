@@ -9,7 +9,7 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { StrapiService } from '../strapi/strapi.service';
 import { User } from './entity/user.entity';
-import { CustomerStripe } from '../stripe/services/customer-stripe.service';
+import { CustomerStripeService } from '../stripe/services/customer-stripe.service';
 import { Permission } from '../config/enum/permission.enum';
 import { PlayerService } from '../player/player.service';
 import { Player } from '../player/entity/player.entity';
@@ -29,7 +29,7 @@ import {
 export class UserService {
   constructor(
     private readonly strapiService: StrapiService,
-    private readonly customerStripeService: CustomerStripe,
+    private readonly customerStripeService: CustomerStripeService,
     private readonly playerService: PlayerService,
     private readonly clubService: ClubService,
     private readonly sponsorService: SponsorService,

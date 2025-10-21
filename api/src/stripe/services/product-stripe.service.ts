@@ -1,10 +1,10 @@
-import { InitStripe } from './init-stripe.service';
+import { InitStripeService } from './init-stripe.service';
 
-export class ProductStripe {
-  private stripe: InitStripe;
+export class ProductStripeService {
+  private stripe: InitStripeService;
 
   constructor() {
-    this.stripe = new InitStripe();
+    this.stripe = new InitStripeService();
   }
 
   public createProduct = async (name: string, description: string) => {

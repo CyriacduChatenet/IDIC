@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { StrapiService } from '../strapi/strapi.service';
 import { StripeModule } from '../stripe/stripe.module';
-import { CustomerStripe } from '../stripe/services/customer-stripe.service';
+import { CustomerStripeService } from '../stripe/services/customer-stripe.service';
 import { PlayerService } from '../player/player.service';
 import { ClubService } from '../club/club.service';
 import { SponsorService } from '../sponsor/sponsor.service';
@@ -17,7 +17,7 @@ import { StrapiApiRequestRepository } from '../strapi/interfaces/strapi-api-requ
   providers: [
     UserService,
     StrapiService,
-    CustomerStripe,
+    CustomerStripeService,
     PlayerService,
     ClubService,
     SponsorService,

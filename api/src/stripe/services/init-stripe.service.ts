@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 
-export class InitStripe {
+export class InitStripeService {
   private stripe: Stripe;
 
   constructor() {

@@ -1,10 +1,10 @@
-import { InitStripe } from './init-stripe.service';
+import { InitStripeService } from './init-stripe.service';
 
-export class InvoiceStripe {
-  private stripe: InitStripe;
+export class InvoiceStripeService {
+  private stripe: InitStripeService;
 
   constructor() {
-    this.stripe = new InitStripe();
+    this.stripe = new InitStripeService();
   }
 
   public createInvoice(customerId: string, autoAdvance = true) {

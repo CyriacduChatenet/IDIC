@@ -1,11 +1,11 @@
 import { handleStripeError } from '../utils/stripe-error.util';
-import { InitStripe } from './init-stripe.service';
+import { InitStripeService } from './init-stripe.service';
 
-export class CustomerStripe {
-  private stripe: InitStripe;
+export class CustomerStripeService {
+  private stripe: InitStripeService;
 
   constructor() {
-    this.stripe = new InitStripe();
+    this.stripe = new InitStripeService();
   }
 
   // 🔹 Créer un client
