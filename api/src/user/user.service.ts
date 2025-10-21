@@ -137,12 +137,17 @@ export class UserService {
     }
   }
 
-  update(
+  async update(
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<StrapiApiUpdateResponse<User>> {
     try {
-      return this.strapiService.updateData(`users/${id}`, updateUserDto);
+      const updatedUser = await this.strapiService.updateData<User>(
+        `users/${id}`,
+        updateUserDto,
+      );
+
+      return { data: updatedUser };
     } catch (err) {
       handleAxiosError(err, `updating user with ID ${id}`);
     }
