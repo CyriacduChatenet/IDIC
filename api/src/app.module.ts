@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { MailModule } from './mail/mail.module';
 import { StripeModule } from './stripe/stripe.module';
 import { PlayerModule } from './player/player.module';
 import { ClubModule } from './club/club.module';
@@ -23,7 +22,6 @@ import { StrapiModule } from './strapi/strapi.module';
     }),
     HttpModule,
     UserModule,
-    MailModule,
     StripeModule,
     PlayerModule,
     ClubModule,
