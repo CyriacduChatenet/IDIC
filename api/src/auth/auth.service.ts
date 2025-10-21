@@ -1,16 +1,26 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+
 import { StrapiService } from '../strapi/strapi.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { StrapiApiCreateResponse } from '../strapi/interfaces/strapi-api-response.interface';
 import { handleAxiosError } from '../config/utils/axios-error.util';
-import { AuthDataResponse } from './response/auth.response';
+import {
+  AuthDataResponse,
+  ChangePasswordDataResponse,
+  ForgotPasswordDataResponse,
+} from './response/auth.response';
 import { CustomerStripeService } from '../stripe/services/customer-stripe.service';
 import { UserService } from '../user/user.service';
 import { Permission } from '../config/enum/permission.enum';
 import { PlayerService } from '../player/player.service';
 import { ClubService } from '../club/club.service';
 import { SponsorService } from '../sponsor/sponsor.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { handleEmailError } from '../strapi/utils/email-error.util';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { SendEmailConfirmationDto } from './dto/send-email-confirmation.dto';
 
 @Injectable()
 export class AuthService {
@@ -73,6 +83,54 @@ export class AuthService {
       >('auth/local', loginDto);
     } catch (err) {
       handleAxiosError(err, 'logging in user');
+    }
+  }
+
+  async forgotPassword(
+    forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<StrapiApiCreateResponse<ForgotPasswordDataResponse>> {
+    try {
+      return await this.strapiService.postData<
+        StrapiApiCreateResponse<ForgotPasswordDataResponse>
+      >('auth/forgot-password', forgotPasswordDto);
+    } catch (err) {
+      handleEmailError(err, 'forgot password process');
+    }
+  }
+
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<StrapiApiCreateResponse<AuthDataResponse>> {
+    try {
+      return await this.strapiService.postData<
+        StrapiApiCreateResponse<AuthDataResponse>
+      >('auth/reset-password', resetPasswordDto);
+    } catch (err) {
+      handleAxiosError(err, 'logging in user');
+    }
+  }
+
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<StrapiApiCreateResponse<ChangePasswordDataResponse>> {
+    try {
+      return await this.strapiService.postData<
+        StrapiApiCreateResponse<ChangePasswordDataResponse>
+      >('auth/change-password', changePasswordDto);
+    } catch (err) {
+      handleAxiosError(err, 'logging in user');
+    }
+  }
+
+  async sendConfirmationEmail(
+    sendEmailConfirmationDto: SendEmailConfirmationDto,
+  ): Promise<StrapiApiCreateResponse<{ ok: boolean }>> {
+    try {
+      return await this.strapiService.postData<
+        StrapiApiCreateResponse<{ ok: boolean }>
+      >('auth/send-email-confirmation', sendEmailConfirmationDto);
+    } catch (err) {
+      handleEmailError(err, 'sending confirmation email');
     }
   }
 
