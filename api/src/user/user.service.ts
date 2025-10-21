@@ -1,6 +1,4 @@
-/* eslint-disable no-case-declarations */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import {
   BadRequestException,
   Injectable,
@@ -15,11 +13,16 @@ import { Permission } from '../config/enum/permission.enum';
 import { PlayerService } from '../player/player.service';
 import { Player } from '../player/entity/player.entity';
 import { ClubService } from '../club/club.service';
-import { Club } from '../club/entities/club.entity';
 import { SponsorService } from '../sponsor/sponsor.service';
-import { Sponsor } from '../sponsor/entities/sponsor.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { handleAxiosError } from '../config/utils/axios-error.utils';
+import {
+  StrapiApiCreateResponse,
+  StrapiApiDeleteResponse,
+  StrapiApiFindAllResponse,
+  StrapiApiFindOneResponse,
+  StrapiApiUpdateResponse,
+} from 'src/strapi/interfaces/strapi-api-response.interface';
 
 @Injectable()
 export class UserService {
@@ -31,7 +34,9 @@ export class UserService {
     private readonly sponsorService: SponsorService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(
+    createUserDto: CreateUserDto,
+  ): Promise<StrapiApiCreateResponse<User>> {
     try {
       const strapiUser = (await this.strapiService.postData(
         'users',
@@ -50,7 +55,7 @@ export class UserService {
       }
 
       switch (createUserDto.permission) {
-        case Permission.Player:
+        case Permission.Player: {
           console.log('create player');
           const newStrapiPlayer = (await this.playerService.create({
             first_name: createUserDto.first_name ?? '',
@@ -60,42 +65,45 @@ export class UserService {
             address: createUserDto.address ?? '',
           })) as { data: Player };
 
-          const updatedStrapiUserPlayer = (await this.update(strapiUser.id, {
+          const updatedStrapiUserPlayer = await this.update(strapiUser.id, {
             stripe_customer_id: stripeCustomer.id,
             player: `${newStrapiPlayer.data.id}`,
-          })) as User;
+          });
 
-          return { updatedStrapiUserPlayer, stripeCustomer };
-        case Permission.Club:
+          return updatedStrapiUserPlayer;
+        }
+        case Permission.Club: {
           console.log('create club');
-          const newStrapiClub = (await this.clubService.create({
+          const newStrapiClub = await this.clubService.create({
             name: createUserDto.name ?? '',
             address: createUserDto.address ?? '',
             phone: createUserDto.phone ?? '',
             email: createUserDto.email ?? '',
-          })) as { data: Club };
+          });
 
-          const updatedStrapiUserClub = (await this.update(strapiUser.id, {
+          const updatedStrapiUserClub = await this.update(strapiUser.id, {
             stripe_customer_id: stripeCustomer.id,
             club: `${newStrapiClub.data.id}`,
-          })) as User;
+          });
 
-          return { updatedStrapiUserClub, stripeCustomer };
-        case Permission.Sponsor:
+          return updatedStrapiUserClub;
+        }
+        case Permission.Sponsor: {
           console.log('create sponsor');
-          const newStrapiSponsor = (await this.sponsorService.create({
+          const newStrapiSponsor = await this.sponsorService.create({
             name: createUserDto.name ?? '',
             address: createUserDto.address ?? '',
             phone: createUserDto.phone ?? '',
             description: createUserDto.description ?? '',
-          })) as { data: Sponsor };
+          });
 
-          const updatedStrapiUserSponsor = (await this.update(strapiUser.id, {
+          const updatedStrapiUserSponsor = await this.update(strapiUser.id, {
             stripe_customer_id: stripeCustomer.id,
             sponsor: `${newStrapiSponsor.data.id}`,
-          })) as User;
+          });
 
-          return { updatedStrapiUserSponsor, stripeCustomer };
+          return updatedStrapiUserSponsor;
+        }
         default:
           throw new BadRequestException('USER_ROLE is not correct !');
       }
@@ -104,7 +112,7 @@ export class UserService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<StrapiApiFindAllResponse<User>> {
     try {
       return this.strapiService.getAllData('users', '*');
     } catch (err) {
@@ -112,7 +120,7 @@ export class UserService {
     }
   }
 
-  findOne(id: string) {
+  findOne(id: string): Promise<StrapiApiFindOneResponse<User>> {
     try {
       return this.strapiService.getDataById(`users/${id}`, '*');
     } catch (err) {
@@ -120,7 +128,7 @@ export class UserService {
     }
   }
 
-  findOneByEmail(email: string) {
+  findOneByEmail(email: string): Promise<StrapiApiFindOneResponse<User>> {
     try {
       return this.strapiService.getDataByField('users', 'email', email);
     } catch (err) {
@@ -128,7 +136,10 @@ export class UserService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<StrapiApiUpdateResponse<User>> {
     try {
       return this.strapiService.updateData(`users/${id}`, updateUserDto);
     } catch (err) {
@@ -136,7 +147,7 @@ export class UserService {
     }
   }
 
-  remove = async (id: string) => {
+  remove = async (id: string): Promise<StrapiApiDeleteResponse<User>> => {
     try {
       const strapiUser = (await this.strapiService.getDataById(
         `users/${id}`,
@@ -163,37 +174,37 @@ export class UserService {
         )) as { data: Player };
 
         await this.playerService.remove(strapiPlayer.data.documentId);
-        const deletedStrapiUser = await this.strapiService.deleteData(
+        const deletedStrapiUser = (await this.strapiService.deleteData(
           `users/${strapiUser.id}`,
-        );
+        )) as unknown as User;
 
-        return { strapiPlayer, deletedStrapiUser };
+        return { data: deletedStrapiUser };
       } else if (strapiUser.club !== null) {
-        const strapiClub = (await this.clubService.findOne(
+        const strapiClub = await this.clubService.findOne(
           strapiUser.club.documentId,
-        )) as { data: Club };
+        );
 
         await this.clubService.remove(strapiClub.data.documentId);
-        const deletedStrapiUser = await this.strapiService.deleteData(
+        const deletedStrapiUser = (await this.strapiService.deleteData(
           `users/${strapiUser.id}`,
-        );
+        )) as unknown as User;
 
-        return { strapiClub, deletedStrapiUser };
+        return { data: deletedStrapiUser };
       } else if (strapiUser.sponsor !== null) {
-        const strapiSponsor = (await this.sponsorService.findOne(
+        const strapiSponsor = await this.sponsorService.findOne(
           strapiUser.sponsor.documentId,
-        )) as { data: Sponsor };
+        );
 
         await this.sponsorService.remove(strapiSponsor.data.documentId);
-        const deletedStrapiUser = await this.strapiService.deleteData(
+        const deletedStrapiUser = (await this.strapiService.deleteData(
           `users/${strapiUser.id}`,
-        );
-        return { strapiSponsor, deletedStrapiUser };
+        )) as unknown as User;
+        return { data: deletedStrapiUser };
       } else {
-        const deletedStrapiUser = await this.strapiService.deleteData(
+        const deletedStrapiUser = (await this.strapiService.deleteData(
           `users/${strapiUser.id}`,
-        );
-        return deletedStrapiUser;
+        )) as unknown as User;
+        return { data: deletedStrapiUser };
       }
     } catch (err) {
       handleAxiosError(err, `deleting user with ID ${id}`);

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Injectable } from '@nestjs/common';
 
 import { CreateEventDto } from './dto/create-event.dto';
@@ -8,6 +8,7 @@ import { ClubService } from '../club/club.service';
 import { Club } from '../club/entities/club.entity';
 import { Event } from './entities/event.entity';
 import {
+  StrapiApiCreateResponse,
   StrapiApiDeleteResponse,
   StrapiApiFindAllResponse,
   StrapiApiFindOneResponse,
@@ -22,7 +23,9 @@ export class EventService {
     private readonly clubService: ClubService,
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
+  async create(
+    createEventDto: CreateEventDto,
+  ): Promise<StrapiApiCreateResponse<Event>> {
     try {
       if (createEventDto.club !== null) {
         const strapiClub = (await this.clubService.findOne(
@@ -39,14 +42,11 @@ export class EventService {
           strapiClubEventIds.push(event.documentId),
         );
 
-        const updateStrapiClub = (await this.clubService.update(
-          strapiClub.data.documentId,
-          {
-            events: [...strapiClubEventIds, strapiEvent.data.documentId],
-          },
-        )) as { data: Club };
+        await this.clubService.update(strapiClub.data.documentId, {
+          events: [...strapiClubEventIds, strapiEvent.data.documentId],
+        });
 
-        return { strapiEvent, updateStrapiClub };
+        return { data: strapiEvent.data };
       } else {
         return await this.strapiService.postData('events', {
           data: createEventDto,

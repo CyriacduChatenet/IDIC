@@ -1,10 +1,12 @@
+// 🔹 CREATE
 export interface StrapiApiCreateResponse<T> {
   data: T;
-  meta: object;
+  meta?: Record<string, any>;
 }
 
+// 🔹 FIND ALL
 export interface StrapiApiFindAllResponse<T> {
-  data: T;
+  data: T[]; // Liste d'éléments
   meta: {
     pagination: {
       page: number;
@@ -15,20 +17,18 @@ export interface StrapiApiFindAllResponse<T> {
   };
 }
 
+// 🔹 FIND ONE
 export interface StrapiApiFindOneResponse<T> {
   data: T;
 }
 
+// 🔹 UPDATE
 export interface StrapiApiUpdateResponse<T> {
   data: T;
-  meta: object;
+  meta?: Record<string, any>;
 }
 
+// 🔹 DELETE
 export interface StrapiApiDeleteResponse<T> {
   data: T;
-}
-
-export interface StrapiApiRegisterResponse<T> {
-  jwt: string;
-  user: T;
 }
