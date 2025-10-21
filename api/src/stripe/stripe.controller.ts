@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get } from '@nestjs/common';
 
-import { CustomerStripe } from './classes/customer.stripe';
+import { CustomerStripe } from './services/customer-stripe.service';
 
 @Controller('stripe')
 export class StripeController {

@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { StrapiService } from '../strapi/strapi.service';
 import { StripeModule } from '../stripe/stripe.module';
-import { CustomerStripe } from '../stripe/classes/customer.stripe';
+import { CustomerStripe } from '../stripe/services/customer-stripe.service';
 import { PlayerService } from '../player/player.service';
 import { ClubService } from '../club/club.service';
 import { SponsorService } from '../sponsor/sponsor.service';

@@ -87,6 +87,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::sponsor.sponsor"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "required": false,
+      "unique": true
     }
   }
 }

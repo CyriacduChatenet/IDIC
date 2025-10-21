@@ -1,4 +1,4 @@
-import { InitStripe } from './init.stripe';
+import { InitStripe } from './init-stripe.service';
 
 export class ProductStripe {
   private stripe: InitStripe;

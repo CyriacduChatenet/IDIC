@@ -27,3 +27,8 @@ export interface StrapiApiUpdateResponse<T> {
 export interface StrapiApiDeleteResponse<T> {
   data: T;
 }
+
+export interface StrapiApiRegisterResponse<T> {
+  jwt: string;
+  user: T;
+}

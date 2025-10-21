@@ -13,7 +13,7 @@ import {
   StrapiApiFindAllResponse,
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
-} from 'src/config/interfaces/strapi-api-response.interface';
+} from 'src/strapi/interfaces/strapi-api-response.interface';
 import { Ticket } from './entities/ticket.entity';
 
 @Injectable()

@@ -1118,6 +1118,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.role'
     >;
     sponsor: Schema.Attribute.Relation<'oneToOne', 'api::sponsor.sponsor'>;
+    stripe_customer_id: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

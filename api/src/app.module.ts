@@ -13,6 +13,7 @@ import { SponsorModule } from './sponsor/sponsor.module';
 import { EventModule } from './event/event.module';
 import { TicketModule } from './ticket/ticket.module';
 import { TeamModule } from './team/team.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TeamModule } from './team/team.module';
     EventModule,
     TicketModule,
     TeamModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -13,7 +13,7 @@ import {
   StrapiApiFindAllResponse,
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
-} from '../config/interfaces/strapi-api-response.interface';
+} from '../strapi/interfaces/strapi-api-response.interface';
 import { Sponsor } from './entities/sponsor.entity';
 
 @Injectable()

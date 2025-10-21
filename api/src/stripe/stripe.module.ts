@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { StripeService } from './stripe.service';
 import { StripeController } from './stripe.controller';
-import { IntentStripe } from './classes/intent.stripe';
-import { CustomerStripe } from './classes/customer.stripe';
+import { IntentStripe } from './services/intent-stripe.service';
+import { CustomerStripe } from './services/customer-stripe.service';
 
 @Module({
   providers: [StripeService, IntentStripe, CustomerStripe],

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { IntentStripe } from './classes/intent.stripe';
+import { IntentStripe } from './services/intent-stripe.service';
 
 @Injectable()
 export class StripeService {

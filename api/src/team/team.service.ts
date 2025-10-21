@@ -12,7 +12,7 @@ import {
   StrapiApiFindAllResponse,
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
-} from '../config/interfaces/strapi-api-response.interface';
+} from '../strapi/interfaces/strapi-api-response.interface';
 import { Team } from './entities/team.entity';
 import { StrapiService } from '../strapi/strapi.service';
 
