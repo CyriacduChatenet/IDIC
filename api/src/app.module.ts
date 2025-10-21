@@ -14,6 +14,7 @@ import { EventModule } from './event/event.module';
 import { TicketModule } from './ticket/ticket.module';
 import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
+import { StrapiModule } from './strapi/strapi.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
     TicketModule,
     TeamModule,
     AuthModule,
+    StrapiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

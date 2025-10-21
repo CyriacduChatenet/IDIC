@@ -9,6 +9,7 @@ import { CustomerStripe } from '../stripe/services/customer-stripe.service';
 import { PlayerService } from '../player/player.service';
 import { ClubService } from '../club/club.service';
 import { SponsorService } from '../sponsor/sponsor.service';
+import { StrapiApiRequestRepository } from '../strapi/interfaces/strapi-api-request.interface';
 
 @Module({
   imports: [HttpModule, StripeModule],
@@ -20,6 +21,7 @@ import { SponsorService } from '../sponsor/sponsor.service';
     PlayerService,
     ClubService,
     SponsorService,
+    StrapiApiRequestRepository,
   ],
 })
 export class UserModule {}
