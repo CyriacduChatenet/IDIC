@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
@@ -15,6 +11,7 @@ import {
 } from '../strapi/interfaces/strapi-api-response.interface';
 import { Team } from './entities/team.entity';
 import { StrapiService } from '../strapi/strapi.service';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class TeamService {
@@ -26,10 +23,7 @@ export class TeamService {
         data: createTeamDto,
       });
     } catch (err) {
-      console.error('Error creating team:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_TEAM`,
-      );
+      handleAxiosError(err, 'creating team');
     }
   }
 
@@ -37,8 +31,7 @@ export class TeamService {
     try {
       return this.strapiService.getAllData('teams');
     } catch (err) {
-      console.error('Error fetching teams:', err);
-      throw new NotFoundException(`No STRAPI_TEAMS found`);
+      handleAxiosError(err, 'fetching teams');
     }
   }
 
@@ -46,8 +39,7 @@ export class TeamService {
     try {
       return this.strapiService.getDataById(`teams/${id}`);
     } catch (err) {
-      console.error('Error fetching taem:', err);
-      throw new NotFoundException(`STRAPI_TEAM with ID ${id} not found`);
+      handleAxiosError(err, `fetching team with ID ${id}`);
     }
   }
 
@@ -60,10 +52,7 @@ export class TeamService {
         data: updateTeamDto,
       });
     } catch (err) {
-      console.error('Error updating team:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_TEAM with ID ${id} and CRDENTIALS ${JSON.stringify(updateTeamDto)}`,
-      );
+      handleAxiosError(err, `updating team with ID ${id}`);
     }
   }
 
@@ -74,10 +63,7 @@ export class TeamService {
 
       return { data: team.data };
     } catch (err) {
-      console.error('Error deleting team:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_TEAM with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting team with ID ${id}`);
     }
   }
 }

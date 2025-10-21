@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -17,6 +13,7 @@ import {
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
 } from '../strapi/interfaces/strapi-api-response.interface';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class EventService {
@@ -56,10 +53,7 @@ export class EventService {
         });
       }
     } catch (err) {
-      console.error('Error creating event:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_EVENT`,
-      );
+      handleAxiosError(err, 'creating event');
     }
   }
 
@@ -67,8 +61,7 @@ export class EventService {
     try {
       return this.strapiService.getAllData('events', '*');
     } catch (err) {
-      console.error('Error fetching events:', err);
-      throw new NotFoundException(`No STRAPI_EVENTS found`);
+      handleAxiosError(err, 'fetching events');
     }
   }
 
@@ -76,8 +69,7 @@ export class EventService {
     try {
       return this.strapiService.getDataById(`events/${id}`, '*');
     } catch (err) {
-      console.error('Error fetching event:', err);
-      throw new NotFoundException(`STRAPI_EVENT with ID ${id} not found`);
+      handleAxiosError(err, `fetching event with ID ${id}`);
     }
   }
 
@@ -90,10 +82,7 @@ export class EventService {
         data: updateEventDto,
       });
     } catch (err) {
-      console.error('Error updating event:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_EVENT with ID ${id} and CRDENTIALS ${JSON.stringify(updateEventDto)}`,
-      );
+      handleAxiosError(err, `updating event with ID ${id}`);
     }
   }
 
@@ -118,10 +107,7 @@ export class EventService {
 
       return { data: strapiEvent.data };
     } catch (err) {
-      console.error('Error deleting event:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_EVENT with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting event with ID ${id}`);
     }
   }
 }

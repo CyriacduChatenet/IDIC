@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
@@ -15,6 +11,7 @@ import {
   StrapiApiUpdateResponse,
 } from 'src/strapi/interfaces/strapi-api-response.interface';
 import { Ticket } from './entities/ticket.entity';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class TicketService {
@@ -26,10 +23,7 @@ export class TicketService {
     try {
       return this.strapiService.postData('tickets', { data: createTicketDto });
     } catch (err) {
-      console.error('Error creating ticket:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_TICKET`,
-      );
+      handleAxiosError(err, 'creating ticket');
     }
   }
 
@@ -37,8 +31,7 @@ export class TicketService {
     try {
       return this.strapiService.getAllData('tickets', '*');
     } catch (err) {
-      console.error('Error fetching tickets:', err);
-      throw new NotFoundException(`No STRAPI_TICKETS found`);
+      handleAxiosError(err, 'fetching tickets');
     }
   }
 
@@ -46,8 +39,7 @@ export class TicketService {
     try {
       return this.strapiService.getDataById(`tickets/${id}`, '*');
     } catch (err) {
-      console.error('Error fetching ticket:', err);
-      throw new NotFoundException(`STRAPI_TICKET with ID ${id} not found`);
+      handleAxiosError(err, `fetching ticket with ID ${id}`);
     }
   }
 
@@ -60,10 +52,7 @@ export class TicketService {
         data: updateTicketDto,
       });
     } catch (err) {
-      console.error('Error updating ticket:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_TICKET with ID ${id} and CRDENTIALS ${JSON.stringify(updateTicketDto)}`,
-      );
+      handleAxiosError(err, `updating ticket with ID ${id}`);
     }
   }
 
@@ -73,10 +62,7 @@ export class TicketService {
       await this.strapiService.deleteData(`tickets/${ticket.data.id}`);
       return { data: ticket.data };
     } catch (err) {
-      console.error('Error deleting ticket:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_TICKET with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting ticket with ID ${id}`);
     }
   }
 }

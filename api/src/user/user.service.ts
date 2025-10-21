@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -16,10 +15,11 @@ import { Permission } from '../config/enum/permission.enum';
 import { PlayerService } from '../player/player.service';
 import { Player } from '../player/entity/player.entity';
 import { ClubService } from '../club/club.service';
-import { Club } from 'src/club/entities/club.entity';
-import { SponsorService } from 'src/sponsor/sponsor.service';
-import { Sponsor } from 'src/sponsor/entities/sponsor.entity';
+import { Club } from '../club/entities/club.entity';
+import { SponsorService } from '../sponsor/sponsor.service';
+import { Sponsor } from '../sponsor/entities/sponsor.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class UserService {
@@ -99,49 +99,40 @@ export class UserService {
         default:
           throw new BadRequestException('USER_ROLE is not correct !');
       }
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw new ForbiddenException(
-        'You do not have PERMISSION to create a STRAPI_USER',
-      );
+    } catch (err) {
+      handleAxiosError(err, 'creating user');
     }
   }
 
   findAll() {
     try {
       return this.strapiService.getAllData('users', '*');
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      throw new NotFoundException('No STRAPI_USERS found');
+    } catch (err) {
+      handleAxiosError(err, 'fetching userss');
     }
   }
 
   findOne(id: string) {
     try {
       return this.strapiService.getDataById(`users/${id}`, '*');
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      throw new NotFoundException(`STRAPI_USER with ID ${id} not found`);
+    } catch (err) {
+      handleAxiosError(err, `fetching user with ID ${id}`);
     }
   }
 
   findOneByEmail(email: string) {
     try {
       return this.strapiService.getDataByField('users', 'email', email);
-    } catch (error) {
-      console.error('Error fetching user by email:', error);
-      throw new NotFoundException(`STRAPI_USER with EMAIL ${email} not found`);
+    } catch (err) {
+      handleAxiosError(err, `fetching user with EMAIL ${email}`);
     }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     try {
       return this.strapiService.updateData(`users/${id}`, updateUserDto);
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_USER with ID ${id} and CREDENTIALS ${JSON.stringify(updateUserDto)}`,
-      );
+    } catch (err) {
+      handleAxiosError(err, `updating user with ID ${id}`);
     }
   }
 
@@ -204,11 +195,8 @@ export class UserService {
         );
         return deletedStrapiUser;
       }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_USER with ID ${id}`,
-      );
+    } catch (err) {
+      handleAxiosError(err, `deleting user with ID ${id}`);
     }
   };
 }

@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -15,6 +11,7 @@ import {
   StrapiApiUpdateResponse,
 } from 'src/strapi/interfaces/strapi-api-response.interface';
 import { Player } from './entity/player.entity';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class PlayerService {
@@ -26,10 +23,7 @@ export class PlayerService {
     try {
       return this.strapiService.postData('players', { data: createPlayerDto });
     } catch (err) {
-      console.error('Error creating player:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_PLAYER`,
-      );
+      handleAxiosError(err, 'creating player');
     }
   }
 
@@ -37,8 +31,7 @@ export class PlayerService {
     try {
       return this.strapiService.getAllData('players');
     } catch (err) {
-      console.error('Error fetching players:', err);
-      throw new NotFoundException(`No STRAPI_PLAYERS found`);
+      handleAxiosError(err, 'fetching players');
     }
   }
 
@@ -46,8 +39,7 @@ export class PlayerService {
     try {
       return this.strapiService.getDataById(`players/${id}`);
     } catch (err) {
-      console.error('Error fetching player:', err);
-      throw new NotFoundException(`STRAPI_PLAYER with ID ${id} not found`);
+      handleAxiosError(err, `fetching player with ID ${id}`);
     }
   }
 
@@ -60,10 +52,7 @@ export class PlayerService {
         data: updatePlayerDto,
       });
     } catch (err) {
-      console.error('Error updating player:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_PLAYER with ID ${id} and CRDENTIALS ${JSON.stringify(updatePlayerDto)}`,
-      );
+      handleAxiosError(err, `updating player with ID ${id}`);
     }
   }
 
@@ -74,10 +63,7 @@ export class PlayerService {
 
       return { data: player.data };
     } catch (err) {
-      console.error('Error deleting player:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_PLAYER with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting player with ID ${id}`);
     }
   }
 }

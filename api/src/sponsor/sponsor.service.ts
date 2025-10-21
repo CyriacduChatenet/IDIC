@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateSponsorDto } from './dto/create-sponsor.dto';
 import { UpdateSponsorDto } from './dto/update-sponsor.dto';
@@ -15,6 +11,7 @@ import {
   StrapiApiUpdateResponse,
 } from '../strapi/interfaces/strapi-api-response.interface';
 import { Sponsor } from './entities/sponsor.entity';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class SponsorService {
@@ -28,10 +25,7 @@ export class SponsorService {
         data: createSponsorDto,
       });
     } catch (err) {
-      console.error('Error creating sponsor:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_SPONSOR`,
-      );
+      handleAxiosError(err, 'creating sponsor');
     }
   }
 
@@ -39,8 +33,7 @@ export class SponsorService {
     try {
       return this.strapiService.getAllData('sponsors');
     } catch (err) {
-      console.error('Error fetching sponsors:', err);
-      throw new NotFoundException(`No STRAPI_SPONSORS found`);
+      handleAxiosError(err, 'fetching sponsors');
     }
   }
 
@@ -48,8 +41,7 @@ export class SponsorService {
     try {
       return this.strapiService.getDataById(`sponsors/${id}`);
     } catch (err) {
-      console.error('Error fetching sponsor:', err);
-      throw new NotFoundException(`STRAPI_SPONSOR with ID ${id} not found`);
+      handleAxiosError(err, `fetching sponsor with ID ${id}`);
     }
   }
 
@@ -62,10 +54,7 @@ export class SponsorService {
         data: updateSponsorDto,
       });
     } catch (err) {
-      console.error('Error updating player:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_SPONSOR with ID ${id} and CRDENTIALS ${JSON.stringify(updateSponsorDto)}`,
-      );
+      handleAxiosError(err, `updating sponsor with ID ${id}`);
     }
   }
 
@@ -76,10 +65,7 @@ export class SponsorService {
 
       return { data: sponsor.data };
     } catch (err) {
-      console.error('Error deleting sponsor:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_SPONSOR with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting sponsor with ID ${id}`);
     }
   }
 }

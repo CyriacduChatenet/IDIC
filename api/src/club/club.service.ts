@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateClubDto } from './dto/create-club.dto';
 import { UpdateClubDto } from './dto/update-club.dto';
@@ -15,6 +11,7 @@ import {
   StrapiApiFindOneResponse,
   StrapiApiUpdateResponse,
 } from '../strapi/interfaces/strapi-api-response.interface';
+import { handleAxiosError } from '../config/utils/axios-error.utils';
 
 @Injectable()
 export class ClubService {
@@ -26,10 +23,7 @@ export class ClubService {
         data: createClubDto,
       });
     } catch (err) {
-      console.error('Error creating club:', err);
-      throw new ForbiddenException(
-        `You do not have PERMISSION to create a STRAPI_CLUB`,
-      );
+      handleAxiosError(err, 'creating club');
     }
   }
 
@@ -37,8 +31,7 @@ export class ClubService {
     try {
       return this.strapiService.getAllData('clubs', '*');
     } catch (err) {
-      console.error('Error fetching clubs:', err);
-      throw new NotFoundException(`No STRAPI_CLUBS found`);
+      handleAxiosError(err, 'fetching clubs');
     }
   }
 
@@ -46,8 +39,7 @@ export class ClubService {
     try {
       return this.strapiService.getDataById(`clubs/${id}`, '*');
     } catch (err) {
-      console.error('Error fetching club:', err);
-      throw new NotFoundException(`STRAPI_CLUB with ID ${id} not found`);
+      handleAxiosError(err, `fetching club with ID ${id}`);
     }
   }
 
@@ -60,10 +52,7 @@ export class ClubService {
         data: updateClubDto,
       });
     } catch (err) {
-      console.error('Error updating club:', err);
-      throw new ForbiddenException(
-        `You do not have permission to update STRAPI_CLUB with ID ${id} and CRDENTIALS ${JSON.stringify(updateClubDto)}`,
-      );
+      handleAxiosError(err, `updating club with ID ${id}`);
     }
   }
 
@@ -73,10 +62,7 @@ export class ClubService {
       await this.strapiService.deleteData(`clubs/${id}`);
       return { data: club.data };
     } catch (err) {
-      console.error('Error deleting club:', err);
-      throw new ForbiddenException(
-        `You do not have permission to delete STRAPI_CLUB with ID ${id}`,
-      );
+      handleAxiosError(err, `deleting club with ID ${id}`);
     }
   }
 }
