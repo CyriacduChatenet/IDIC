@@ -9,7 +9,7 @@ export class IntentController {
   constructor(private readonly intentStripeService: IntentStripeService) {}
 
   @Post()
-  create(createIntentDto: CreateIntentDto) {
+  create(@Body() createIntentDto: CreateIntentDto) {
     return this.intentStripeService.createPaymentIntent(createIntentDto);
   }
 

@@ -3,6 +3,10 @@
     "name": "client",
     "slug": "client",
     "version": "1.0.0",
+    "extra": {
+      "STRIPE_PUBLIC_KEY": "process.env.STRIPE_PUBLIC_KEY",
+      "EXPO_PUBLIC_API_URL": "process.env.EXPO_PUBLIC_API_URL"
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

@@ -12,6 +12,8 @@ import { InvoiceStripeService } from './services/invoice-stripe.service';
 import { PriceStripeService } from './services/price-stripe.service';
 import { ProductStripeService } from './services/product-stripe.service';
 import { SubscriptionStripeService } from './services/subscription-stripe.service';
+import { StripeWebhookController } from './controllers/webhook/webhook.controller';
+import { InitStripeService } from './services/init-stripe.service';
 
 @Module({
   controllers: [
@@ -21,8 +23,10 @@ import { SubscriptionStripeService } from './services/subscription-stripe.servic
     PriceController,
     ProductController,
     SubscriptionController,
+    StripeWebhookController,
   ],
   providers: [
+    InitStripeService,
     IntentStripeService,
     CustomerStripeService,
     InvoiceStripeService,
