@@ -51,10 +51,10 @@ export class AuthService {
         throw new BadRequestException('Invalid response from Strapi');
       }
 
-      const stripeCustomer = await this.customerStripeService.createCustomer(
-        strapiUser.email,
-        strapiUser.username,
-      );
+      const stripeCustomer = await this.customerStripeService.createCustomer({
+        email: strapiUser.email,
+        name: strapiUser.username,
+      });
       if (!stripeCustomer) {
         throw new BadRequestException(
           `Failed to create STRIPE_CUSTOMER for ${strapiUser.email}`,

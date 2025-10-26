@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import {
   BadRequestException,
@@ -44,10 +43,10 @@ export class UserService {
         createUserDto,
       )) as User;
 
-      const stripeCustomer = await this.customerStripeService.createCustomer(
-        strapiUser.email,
-        strapiUser.username,
-      );
+      const stripeCustomer = await this.customerStripeService.createCustomer({
+        email: strapiUser.email,
+        name: strapiUser.username,
+      });
 
       if (!stripeCustomer) {
         throw new BadRequestException(

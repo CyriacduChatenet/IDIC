@@ -1,3 +1,5 @@
+import { CreateStripeCustomerDto } from '../dto/customer/create-customer.dto';
+import { UpdateStripeCustomerDto } from '../dto/customer/update-customer.dto';
 import { handleStripeError } from '../utils/stripe-error.util';
 import { InitStripeService } from './init-stripe.service';
 
@@ -8,17 +10,15 @@ export class CustomerStripeService {
     this.stripe = new InitStripeService();
   }
 
-  // 🔹 Créer un client
-  async createCustomer(email: string, name: string) {
+  async createCustomer(createStripeCustomerDto: CreateStripeCustomerDto) {
     try {
       const stripeInstance = this.stripe.getStripeInstance();
-      return await stripeInstance.customers.create({ email, name });
+      return await stripeInstance.customers.create(createStripeCustomerDto);
     } catch (err) {
       handleStripeError(err, 'creating customer');
     }
   }
 
-  // 🔹 Récupérer un client
   async retrieveCustomer(customerId: string) {
     try {
       const stripeInstance = this.stripe.getStripeInstance();
@@ -28,20 +28,21 @@ export class CustomerStripeService {
     }
   }
 
-  // 🔹 Mettre à jour un client
   async updateCustomer(
     customerId: string,
-    updates: { email?: string; name?: string; stripe_customer_id?: string },
+    updateStripeCustomerDto: UpdateStripeCustomerDto,
   ) {
     try {
       const stripeInstance = this.stripe.getStripeInstance();
-      return await stripeInstance.customers.update(customerId, updates);
+      return await stripeInstance.customers.update(
+        customerId,
+        updateStripeCustomerDto,
+      );
     } catch (err) {
       handleStripeError(err, `updating customer ${customerId}`);
     }
   }
 
-  // 🔹 Supprimer un client
   async deleteCustomer(customerId: string) {
     try {
       const stripeInstance = this.stripe.getStripeInstance();
@@ -51,7 +52,6 @@ export class CustomerStripeService {
     }
   }
 
-  // 🔹 Lister les clients
   async listCustomers(limit: number = 10) {
     try {
       const stripeInstance = this.stripe.getStripeInstance();

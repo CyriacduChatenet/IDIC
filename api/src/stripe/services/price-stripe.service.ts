@@ -1,3 +1,5 @@
+import { CreateStripePriceDto } from '../dto/price/create-price.dto';
+import { UpdateStripePriceDto } from '../dto/price/update-price.dto';
 import { InitStripeService } from './init-stripe.service';
 
 export class PriceStripeService {
@@ -7,16 +9,10 @@ export class PriceStripeService {
     this.stripe = new InitStripeService();
   }
 
-  public createPrice = async (
-    productId: string,
-    unitAmount: number,
-    currency: string,
-  ) => {
-    return await this.stripe.getStripeInstance().prices.create({
-      product: productId,
-      unit_amount: unitAmount,
-      currency: currency,
-    });
+  public createPrice = async (createStripePrice: CreateStripePriceDto) => {
+    return await this.stripe
+      .getStripeInstance()
+      .prices.create(createStripePrice);
   };
 
   public retrievePrice = async (priceId: string) => {
@@ -32,11 +28,11 @@ export class PriceStripeService {
 
   public updatePrice = async (
     priceId: string,
-    metadata: Record<string, string>,
+    updateStripePrice: UpdateStripePriceDto,
   ) => {
-    return await this.stripe.getStripeInstance().prices.update(priceId, {
-      metadata: metadata,
-    });
+    return await this.stripe
+      .getStripeInstance()
+      .prices.update(priceId, updateStripePrice);
   };
 
   public deletePrice = async (priceId: string) => {

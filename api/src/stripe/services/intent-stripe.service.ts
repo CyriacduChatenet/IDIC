@@ -1,3 +1,5 @@
+import { CreateIntentDto } from '../dto/intent/create-intent.dto';
+import { UpdateIntentDto } from '../dto/intent/update-intent.dto';
 import { InitStripeService } from './init-stripe.service';
 
 export class IntentStripeService {
@@ -7,17 +9,9 @@ export class IntentStripeService {
     this.stripe = new InitStripeService();
   }
 
-  public createPaymentIntent(
-    amount: number,
-    currency: string,
-    customerId?: string,
-  ) {
+  public createPaymentIntent(createIntentDto: CreateIntentDto) {
     const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.paymentIntents.create({
-      amount,
-      currency,
-      customer: customerId,
-    });
+    return stripeInstance.paymentIntents.create(createIntentDto);
   }
 
   public retrievePaymentIntent(paymentIntentId: string) {
@@ -27,10 +21,13 @@ export class IntentStripeService {
 
   public updatePaymentIntent(
     paymentIntentId: string,
-    updates: { amount?: number; currency?: string },
+    updateIntentDto: UpdateIntentDto,
   ) {
     const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.paymentIntents.update(paymentIntentId, updates);
+    return stripeInstance.paymentIntents.update(
+      paymentIntentId,
+      updateIntentDto,
+    );
   }
 
   public confirmPaymentIntent(paymentIntentId: string) {

@@ -1,3 +1,4 @@
+import { CreateStripeProductDto } from '../dto/product/create-product.dto';
 import { InitStripeService } from './init-stripe.service';
 
 export class ProductStripeService {
@@ -7,11 +8,12 @@ export class ProductStripeService {
     this.stripe = new InitStripeService();
   }
 
-  public createProduct = async (name: string, description: string) => {
-    return await this.stripe.getStripeInstance().products.create({
-      name,
-      description,
-    });
+  public createProduct = async (
+    createStripeProductDto: CreateStripeProductDto,
+  ) => {
+    return await this.stripe
+      .getStripeInstance()
+      .products.create(createStripeProductDto);
   };
 
   public retrieveProduct = async (productId: string) => {

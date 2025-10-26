@@ -1,4 +1,4 @@
-export interface StripeApiFindOneCustomer {
+export interface StripeCustomer {
   id: string;
   object: 'customer';
   address: null | string;

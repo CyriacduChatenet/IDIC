@@ -1,3 +1,4 @@
+import { CreateStripeInvoiceDto } from '../dto/invoice/create-invoice.dto';
 import { InitStripeService } from './init-stripe.service';
 
 export class InvoiceStripeService {
@@ -7,12 +8,9 @@ export class InvoiceStripeService {
     this.stripe = new InitStripeService();
   }
 
-  public createInvoice(customerId: string, autoAdvance = true) {
+  public createInvoice(createInvoiceDto: CreateStripeInvoiceDto) {
     const stripeInstance = this.stripe.getStripeInstance();
-    return stripeInstance.invoices.create({
-      customer: customerId,
-      auto_advance: autoAdvance,
-    });
+    return stripeInstance.invoices.create(createInvoiceDto);
   }
 
   public retrieveInvoice(invoiceId: string) {
