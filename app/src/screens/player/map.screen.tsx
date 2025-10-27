@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import Map from "../../components/map/map.component";
 
 interface PlayerMapScreenProps {
     navigation: any;
@@ -8,7 +9,8 @@ interface PlayerMapScreenProps {
 const PlayerMapScreen = ({ navigation }: PlayerMapScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>Map view!</Text>
+      {/* <Text>Map view!</Text> */}
+      <Map />
       <StatusBar style="auto" />
     </View>
   );

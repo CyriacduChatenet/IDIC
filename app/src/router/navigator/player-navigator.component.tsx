@@ -39,7 +39,7 @@ const PlayerNavigator = () => {
       <Tab.Screen
         name="Map"
         component={PlayerMapScreen}
-        options={{ title: "Carte", headerShown: false }}
+        options={{ title: "Carte", headerShown: true }}
       />
       <Tab.Screen
         name="Tickets"
