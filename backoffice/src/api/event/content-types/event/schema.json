@@ -55,10 +55,6 @@
       "type": "email",
       "required": true
     },
-    "team_size": {
-      "type": "integer",
-      "required": true
-    },
     "club": {
       "type": "relation",
       "relation": "manyToOne",
@@ -70,6 +66,10 @@
       "relation": "oneToMany",
       "target": "api::ticket.ticket",
       "mappedBy": "event"
+    },
+    "team_size": {
+      "type": "integer",
+      "required": true
     }
   }
 }

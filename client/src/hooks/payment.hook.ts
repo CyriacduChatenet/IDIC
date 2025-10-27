@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useStripe } from '@stripe/stripe-react-native';
-import Constants from 'expo-constants';
 
 export const useStripePayment = (amount: number, currency: string = 'eur') => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -12,7 +11,7 @@ export const useStripePayment = (amount: number, currency: string = 'eur') => {
     const initializePaymentSheet = async () => {
       try {
         const response = await fetch(
-          `${Constants.manifest?.extra?.EXPO_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/stripe/intent`,
+          `${process.env.EXPO_PUBLIC_API_URL}/api/v1/stripe/intent`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

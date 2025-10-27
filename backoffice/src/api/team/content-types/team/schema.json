@@ -20,6 +20,10 @@
       "relation": "manyToMany",
       "target": "api::player.player",
       "inversedBy": "teams"
+    },
+    "size": {
+      "type": "integer",
+      "required": true
     }
   }
 }
