@@ -1,14 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-interface PlayerHomeScreenProps {
+interface PlayerMapScreenProps {
     navigation: any;
 }
 
-const PlayerHomeScreen = ({ navigation }: PlayerHomeScreenProps) => {
+const PlayerMapScreen = ({ navigation }: PlayerMapScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>Player home view!</Text>
+      <Text>Map view!</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlayerHomeScreen;
+export default PlayerMapScreen;

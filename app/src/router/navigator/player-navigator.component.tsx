@@ -3,7 +3,7 @@ import { Ionicons } from "@react-native-vector-icons/ionicons";
 
 import PlayerTicketScreen from "../../screens/player/ticket.screen";
 import PlayerProfileScreen from "../../screens/player/profile.screen";
-import PlayerHomeScreen from "../../screens/player/home.screen";
+import PlayerMapScreen from "../../screens/player/map.screen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +37,9 @@ const PlayerNavigator = () => {
       })}
     >
       <Tab.Screen
-        name="Home"
-        component={PlayerHomeScreen} // L'écran d'accueil est défini ici
-        options={{ title: "Dashboard", headerShown: false }}
+        name="Map"
+        component={PlayerMapScreen}
+        options={{ title: "Carte", headerShown: false }}
       />
       <Tab.Screen
         name="Tickets"
