@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Button, ActivityIndicator } from 'react-native';
 import { useStripePayment } from '../../hooks/payment.hook';
 
-const PaymentView = () => {
+const PaymentScreen = () => {
   const { loading, openPaymentSheet } = useStripePayment(5000, 'eur');
   // const { loading, openSubscriptionSheet } = useStripeSubscription('price_123');
 
@@ -18,4 +18,4 @@ const PaymentView = () => {
   );
 };
 
-export default PaymentView;
+export default PaymentScreen;

@@ -1,7 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
 
-const PlayerHomeView = () => {
+interface PlayerHomeScreenProps {
+    navigation: any;
+}
+
+const PlayerHomeScreen = ({ navigation }: PlayerHomeScreenProps) => {
   return (
     <View style={styles.container}>
       <Text>Player home view!</Text>
@@ -19,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlayerHomeView;
+export default PlayerHomeScreen;

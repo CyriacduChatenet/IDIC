@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-const ClubHomeView = () => {
+const LoginView = () => {
   return (
     <View style={styles.container}>
-      <Text>Club home view!</Text>
+      <Text>Login view!</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ClubHomeView;
+export default LoginView;
