@@ -43,18 +43,24 @@ export class TeamService {
     }
   }
 
-  update(
+  update = async (
     id: string,
     updateTeamDto: UpdateTeamDto,
-  ): Promise<StrapiApiUpdateResponse<Team>> {
+  ): Promise<StrapiApiUpdateResponse<Team>> => {
     try {
+      const team = await this.findOne(id);
+
+      if (team.data.players.length >= team.data.size) {
+        handleAxiosError('Team is full', `updating team with ID ${id}`);
+      }
+
       return this.strapiService.updateData(`teams/${id}`, {
         data: updateTeamDto,
       });
     } catch (err) {
       handleAxiosError(err, `updating team with ID ${id}`);
     }
-  }
+  };
 
   async remove(id: string): Promise<StrapiApiDeleteResponse<Team>> {
     try {
