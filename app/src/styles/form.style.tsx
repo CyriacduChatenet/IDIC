@@ -47,4 +47,7 @@ export const formStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  inputGroup: {
+        marginBottom: 15, // Espacement entre les champs
+    },
 });

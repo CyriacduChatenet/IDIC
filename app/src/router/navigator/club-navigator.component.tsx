@@ -16,7 +16,7 @@ const ClubNavigator = () => {
 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Event") {
+          } else if (route.name === "CreateEvent") {
             iconName = focused ? "people" : "people-outline";
           } else if (route.name === "Membres") {
             iconName = focused ? "people" : "people-outline";
@@ -42,9 +42,9 @@ const ClubNavigator = () => {
         options={{ title: "Dashboard", headerShown: false }}
       />
       <Tab.Screen
-        name="Event"
+        name="CreateEvent"
         component={ClubCreateEventScreen}
-        options={{ title: "Créer un Tournoi", headerShown: true }}
+        options={{ title: "Créer un Tournoi", headerShown: false }}
       />
       <Tab.Screen
         name="Profile"

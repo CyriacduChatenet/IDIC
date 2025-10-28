@@ -3,6 +3,8 @@ export class CreateEventDto {
   date: Date;
   description: string;
   address: string;
+  lat: string;
+  lon: string;
   pictures?: string[];
   banner?: string;
   phone: string;

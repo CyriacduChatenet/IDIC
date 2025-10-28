@@ -9,7 +9,7 @@ import SponsorStack from "./stacks/sponsor.stack";
 const Router = () => {
   // 💡 En réalité, cette valeur viendrait d'un contexte global (ex: AuthContext)
   // Pour la démonstration de la correction, nous laissons 'null' ici
-  const user: User | null = { permission: Permission.Player } as User | null;
+  const user: User | null = { permission: Permission.Club } as User | null;
 
   // 1. Vérifiez si l'utilisateur est null (non connecté) en premier
   if (!user) {

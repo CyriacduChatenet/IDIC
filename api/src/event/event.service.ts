@@ -65,6 +65,30 @@ export class EventService {
     }
   }
 
+  findAllByClubId(
+    clubId: string, // L'ID que vous recevez (doit être l'ID interne du joueur, pas le documentId)
+  ): Promise<StrapiApiFindAllResponse<Event>> {
+    try {
+      const filters = {
+        filters: {
+          club: {
+            // 💡 REVENIR à l'utilisation de l'ID standard pour le filtrage de relation.
+            id: {
+              $eq: clubId,
+            },
+          },
+        },
+        populate: {
+          club: true,
+        },
+      };
+
+      return this.strapiService.getAllDataByQuery('events', filters);
+    } catch (err) {
+      handleAxiosError(err, 'fetching tickets');
+    }
+  }
+
   findOne(id: string): Promise<StrapiApiFindOneResponse<Event>> {
     try {
       return this.strapiService.getDataById(`events/${id}`, '*');

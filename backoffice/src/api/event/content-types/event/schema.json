@@ -23,10 +23,6 @@
       "type": "richtext",
       "required": true
     },
-    "address": {
-      "type": "string",
-      "required": true
-    },
     "pictures": {
       "type": "media",
       "multiple": true,
@@ -70,6 +66,16 @@
     "team_size": {
       "type": "integer",
       "required": true
+    },
+    "address": {
+      "type": "string",
+      "required": true
+    },
+    "lat": {
+      "type": "string"
+    },
+    "lon": {
+      "type": "string"
     }
   }
 }

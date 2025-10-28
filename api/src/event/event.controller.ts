@@ -26,6 +26,11 @@ export class EventController {
     return this.eventService.findAll();
   }
 
+  @Get('club/:id')
+  findAllByPlayerId(@Param('id') id: string) {
+    return this.eventService.findAllByClubId(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventService.findOne(id);
