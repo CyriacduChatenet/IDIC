@@ -44,7 +44,7 @@ const ClubNavigator = () => {
       <Tab.Screen
         name="Event"
         component={ClubCreateEventScreen}
-        options={{ title: "Tournoi", headerShown: false }}
+        options={{ title: "Créer un Tournoi", headerShown: true }}
       />
       <Tab.Screen
         name="Profile"

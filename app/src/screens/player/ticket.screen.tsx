@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
+import TicketList from "../../components/ticket/ticket-list.component";
+
 interface PlayerTicketScreenProps {
     navigation: any;
 }
@@ -8,7 +10,7 @@ interface PlayerTicketScreenProps {
 const PlayerTicketScreen = ({ navigation }: PlayerTicketScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>Ticket view!</Text>
+      <TicketList />
       <StatusBar style="auto" />
     </View>
   );

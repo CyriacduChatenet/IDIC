@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import * as qs from 'qs';
+
 import { StrapiApiRequestRepository } from './interfaces/strapi-api-request.interface';
 
 @Injectable()
@@ -10,6 +12,13 @@ export class StrapiService {
   async getAllData<T>(endpoint: string, populate?: string): Promise<T> {
     const params = populate ? { populate } : undefined;
     return this.strapiApiRequestRepository.get<T>(endpoint, params);
+  }
+
+  async getAllDataByQuery<T>(endpoint: string, params: any = {}): Promise<T> {
+    const queryString = qs.stringify(params, {
+      encodeValuesOnly: true,
+    });
+    return this.strapiApiRequestRepository.get<T>(`${endpoint}?${queryString}`);
   }
 
   async getDataById<T>(endpoint: string, populate?: string): Promise<T> {

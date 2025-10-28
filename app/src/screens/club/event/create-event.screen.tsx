@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import CreateEventForm from "../../../components/event/create-event-form.component";
 
 interface ClubCreateEventScreenProps {
     navigation: any;
@@ -8,7 +9,7 @@ interface ClubCreateEventScreenProps {
 const ClubCreateEventScreen = ({ navigation }: ClubCreateEventScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>Create event screen !</Text>
+      <CreateEventForm navigation={navigation} />
       <StatusBar style="auto" />
     </View>
   );

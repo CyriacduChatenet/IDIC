@@ -26,6 +26,11 @@ export class TicketController {
     return this.ticketService.findAll();
   }
 
+  @Get('player/:id')
+  findAllByPlayerId(@Param('id') id: string) {
+    return this.ticketService.findAllByPlayerId(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ticketService.findOne(id);

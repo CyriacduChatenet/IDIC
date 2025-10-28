@@ -1,7 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-const ClubHomeScreen = () => {
+interface ClubHomeScreenProps {
+    navigation: any;
+}
+
+const ClubHomeScreen = ({ navigation}: ClubHomeScreenProps) => {
   return (
     <View style={styles.container}>
       <Text>Club home view!</Text>

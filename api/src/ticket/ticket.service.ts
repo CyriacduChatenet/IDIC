@@ -35,6 +35,41 @@ export class TicketService {
     }
   }
 
+  // tickets.service.ts
+
+  findAllByPlayerId(
+    playerId: string, // L'ID que vous recevez (doit être l'ID interne du joueur, pas le documentId)
+  ): Promise<StrapiApiFindAllResponse<Ticket>> {
+    try {
+      const filters = {
+        filters: {
+          player: {
+            // 💡 REVENIR à l'utilisation de l'ID standard pour le filtrage de relation.
+            id: {
+              $eq: playerId,
+            },
+          },
+        },
+        populate: {
+          // 💡 S'assurer que la relation 'player' (utilisée dans le filtre) est peuplée
+          player: true,
+
+          // 💡 S'assurer que la relation 'event' (que vous voulez récupérer) est peuplée
+          event: true,
+
+          // Si 'event' a lui-même des relations à peupler (peuplement profond)
+          // event: {
+          //   populate: ['location', 'category']
+          // }
+        },
+      };
+
+      return this.strapiService.getAllDataByQuery('tickets', filters);
+    } catch (err) {
+      handleAxiosError(err, 'fetching tickets');
+    }
+  }
+
   findOne(id: string): Promise<StrapiApiFindOneResponse<Ticket>> {
     try {
       return this.strapiService.getDataById(`tickets/${id}`, '*');
