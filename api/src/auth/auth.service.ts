@@ -37,6 +37,7 @@ export class AuthService {
     registerDto: RegisterDto,
   ): Promise<StrapiApiCreateResponse<AuthDataResponse>> {
     try {
+      console.log(registerDto);
       const response = await this.strapiService.postData<AuthDataResponse>(
         'auth/local/register',
         {
@@ -64,7 +65,6 @@ export class AuthService {
       const updatedUser = await this.createRoleEntityAndUpdateUser(
         strapiUser.id,
         registerDto,
-        strapiUser.permission,
         stripeCustomer.id,
       );
 
@@ -137,10 +137,10 @@ export class AuthService {
   private async createRoleEntityAndUpdateUser(
     userId: number,
     dto: RegisterDto,
-    permission: Permission,
     stripeCustomerId: string,
   ) {
-    switch (permission) {
+    console.log(dto);
+    switch (dto.permission) {
       case Permission.Player: {
         const player = await this.playerService.create({
           first_name: dto.first_name ?? '',
@@ -152,6 +152,7 @@ export class AuthService {
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
+          permission: dto.permission,
           player: `${player.data.id}`,
         });
         return updatedUser.data;
@@ -162,11 +163,11 @@ export class AuthService {
           name: dto.name ?? '',
           address: dto.address ?? '',
           phone: dto.phone ?? '',
-          email: dto.email ?? '',
         });
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
+          permission: dto.permission,
           club: `${club.data.id}`,
         });
         return updatedUser.data;
@@ -182,6 +183,7 @@ export class AuthService {
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
+          permission: dto.permission,
           sponsor: `${sponsor.data.id}`,
         });
         return updatedUser.data;

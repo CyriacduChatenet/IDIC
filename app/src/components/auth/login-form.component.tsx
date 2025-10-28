@@ -1,75 +1,111 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TextInput,
+  Text,
   TouchableOpacity,
+  StyleSheet,
   Alert,
   ActivityIndicator,
-  StyleSheet,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { formStyles } from "../../styles/form.style"; // Importation des styles partagés
-import { LoginDto } from "../../types/auth.type";
+
+// Assurez-vous d'avoir ces types et styles disponibles
+import { User } from "../../types/user.type";
+import { formStyles } from "../../styles/form.style";
+import { Permission } from "../../enum/permission.enum";
 import AuthService from "../../services/auth.service";
 
-// Props du formulaire : nécessite l'objet navigation pour naviguer après succès
+// --- TYPES ET INTERFACES ---
+
+// Les données d'entrée du formulaire
+interface LoginFormInputs {
+  identifier: string;
+  password: string;
+}
+
+// Les props nécessaires, incluant la fonction de succès du contexte
 interface LoginFormProps {
+  onLoginSuccess: (user: User) => void;
   navigation: any;
 }
 
-const LoginForm = ({ navigation }: LoginFormProps) => {
+// --- LOGIQUE DU COMPOSANT ---
+
+const LoginForm = ({ onLoginSuccess, navigation }: LoginFormProps) => {
   const [loading, setLoading] = useState(false);
 
-  const handleForgotPassword = () => {
-    navigation.navigate("ForgotPassword");
-  };
+  const authService = new AuthService();
 
-  // Initialisation de React Hook Form
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginDto>({
+  } = useForm<LoginFormInputs>({
     defaultValues: {
       identifier: "",
       password: "",
     },
   });
 
-  const authService = new AuthService();
-
-  // Fonction de soumission appelée si la validation est réussie
-  const onSubmit = async (data: LoginDto) => {
-    console.log(data);
+  // 💡 Fonction de soumission (Clé de l'intégration du contexte)
+  const onSubmit = async (data: LoginFormInputs) => {
     if (loading) return;
+
     setLoading(true);
 
-    await authService.login(data);
-    setLoading(false);
+    try {
+      // 1. Appel au service d'authentification
+      // 💡 Remplacez ceci par votre appel API réel (AuthService.login(data.email, data.password))
+      const authResponse = await authService.login({
+        identifier: data.identifier,
+        password: data.password,
+      });
+
+      console.log('authResponse', authResponse);
+
+      if (authResponse && authResponse.jwt) {
+        // 2. Création de l'objet utilisateur à partir de la réponse
+        // L'objet doit contenir au moins l'ID et la Permission.
+        const userFromApi: User = {
+          id: authResponse.user.id,
+          permission: authResponse.user.permission, // Ex: Permission.Player
+          // ... autres données nécessaires
+        } as User;
+
+        // 3. 🔑 Appel de la fonction de contexte : Ceci met à jour l'état global
+        onLoginSuccess(userFromApi);
+
+        // Le Router prendra le relais et affichera PlayerStack/ClubStack.
+      } else {
+        // Gérer le cas où l'API répond sans succès (ex: crédentiels invalides)
+        Alert.alert("Erreur de connexion", "Email ou mot de passe invalide.");
+      }
+    } catch (error) {
+      console.error("Erreur de l'API de connexion:", error);
+      Alert.alert(
+        "Erreur",
+        "Une erreur est survenue lors de la connexion. Veuillez réessayer."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <View>
-      {/* Champ Email */}
+    <View style={styles.formContainer}>
+      {/* 1. Champ Email */}
       <Controller
         control={control}
         name="identifier"
         rules={{
           required: "L'email est requis.",
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "Format d'email invalide.",
-          },
+          pattern: { value: /^\S+@\S+$/i, message: "Format d'email invalide." },
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={[
-              formStyles.input,
-              errors.identifier && formStyles.inputError,
-            ]}
-            placeholder="Adresse e-mail"
-            placeholderTextColor="#888"
+            style={[formStyles.input, errors.identifier && formStyles.inputError]}
+            placeholder="Adresse Email"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -82,22 +118,15 @@ const LoginForm = ({ navigation }: LoginFormProps) => {
         <Text style={formStyles.errorText}>{errors.identifier.message}</Text>
       )}
 
-      {/* Champ Mot de passe */}
+      {/* 2. Champ Mot de passe */}
       <Controller
         control={control}
         name="password"
-        rules={{
-          required: "Le mot de passe est requis.",
-          minLength: {
-            value: 6,
-            message: "Le mot de passe doit contenir au moins 6 caractères.",
-          },
-        }}
+        rules={{ required: "Le mot de passe est requis." }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
             style={[formStyles.input, errors.password && formStyles.inputError]}
             placeholder="Mot de passe"
-            placeholderTextColor="#888"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -109,18 +138,14 @@ const LoginForm = ({ navigation }: LoginFormProps) => {
         <Text style={formStyles.errorText}>{errors.password.message}</Text>
       )}
 
-      {/* Bouton de Mot de passe oublié (logique d'interaction ici) */}
+      {/* 3. Bouton de Soumission */}
       <TouchableOpacity
-        onPress={() => handleForgotPassword()}
-        disabled={loading}
-      >
-        <Text style={styles.forgotPassword}>Mot de passe oublié ?</Text>
-      </TouchableOpacity>
-
-      {/* Bouton de Soumission : utilise handleSubmit de RHF */}
-      <TouchableOpacity
-        style={[formStyles.button, loading && formStyles.buttonDisabled]}
-        onPress={handleSubmit(onSubmit)} // Déclenche la validation et la soumission
+        style={[
+          formStyles.button,
+          styles.submitButton,
+          loading && formStyles.buttonDisabled,
+        ]}
+        onPress={handleSubmit(onSubmit)}
         disabled={loading}
       >
         {loading ? (
@@ -133,16 +158,16 @@ const LoginForm = ({ navigation }: LoginFormProps) => {
   );
 };
 
-// Styles spécifiques au LoginForm
+// --- Styles Spécifiques (à ajuster selon form.style) ---
 const styles = StyleSheet.create({
-  forgotPassword: {
-    marginTop: 10,
-    marginBottom: 20,
-    color: "#007AFF",
-    fontSize: 14,
-    textAlign: "center",
-    textDecorationLine: "underline",
+  formContainer: {
+    width: "100%",
   },
+  submitButton: {
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  // ... (autres styles si nécessaire)
 });
 
 export default LoginForm;

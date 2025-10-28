@@ -8,13 +8,23 @@ import {
   Alert,
 } from "react-native";
 import LoginForm from "../../components/auth/login-form.component"; // Assurez-vous que ce chemin est correct
+import { useAuth } from "../../context/authContext";
 
 const LoginScreen = ({ navigation }: any) => {
   
-  // Gestionnaire pour l'inscription
+  // 💡 1. Accès au contexte d'authentification pour la fonction login
+  const { login } = useAuth();
+
+  // Gestionnaire pour l'inscription (reste inchangé, car il navigue dans le Stack)
   const handleRegister = () => {
     navigation.navigate('Register')
   };
+
+  /* * 💡 NOTE IMPORTANTE :
+   * La navigation vers l'écran principal (PlayerStack/ClubStack, etc.)
+   * n'est plus gérée par navigation.navigate.
+   * Elle est gérée par la fonction 'login' du contexte.
+   */
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -22,8 +32,11 @@ const LoginScreen = ({ navigation }: any) => {
         <Text style={styles.title}>Bienvenue</Text>
         <Text style={styles.subtitle}>Connectez-vous pour continuer</Text>
 
-        {/* Intégration du composant de formulaire */}
-        <LoginForm navigation={navigation} />
+        {/* 💡 2. Passage de la fonction 'login' du contexte au composant LoginForm */}
+        <LoginForm 
+          onLoginSuccess={login} 
+          navigation={navigation} // La navigation est maintenue pour le lien d'inscription à l'intérieur du formulaire si besoin
+        />
 
         {/* Lien d'inscription */}
         <TouchableOpacity
@@ -36,7 +49,7 @@ const LoginScreen = ({ navigation }: any) => {
   );
 };
 
-// --- Styles ---
+// --- Styles (inchangés) ---
 
 const styles = StyleSheet.create({
   safeArea: {

@@ -2,6 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Pour de belles icônes
 import React, { useState } from "react"; // 💡 Assurez-vous d'importer React
+import { useAuth } from "../../context/authContext";
+import AuthService from "../../services/auth.service";
 
 interface ClubProfileScreenProps {
     navigation: any;
@@ -28,12 +30,18 @@ const MOCK_CLUB_DATA = {
 
 const ClubProfileScreen = ({ navigation }: ClubProfileScreenProps) => {
   const club = MOCK_CLUB_DATA;
+    const { logout, user } = useAuth();
 
   const [openPicker, setOpenPicker] = useState(false);
+  const authService = new AuthService();
   
   // Fonction de déconnexion (simulée)
   const handleLogout = () => {
     console.log("Déconnexion de l'utilisateur...");
+
+    authService.logout(user?.email as string);
+    
+    logout();
     // 1. Logique d'authentification (ex: await signOut(auth))
     
     // 2. Navigation vers l'écran de connexion/initial

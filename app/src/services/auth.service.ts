@@ -6,6 +6,7 @@ import {
   RegisterDto,
   ResetPasswordDto,
 } from "../types/auth.type";
+import { Permission } from "../enum/permission.enum";
 
 class AuthService {
   public login = async (data: LoginDto) => {
@@ -24,6 +25,7 @@ class AuthService {
   };
 
   public register = async (data: RegisterDto) => {
+    console.log("register", data);
     try {
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/register`,
@@ -58,6 +60,21 @@ class AuthService {
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/reset-password`,
         data
+      );
+
+      console.log(response.data);
+
+      return response.data;
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+  };
+
+  public logout = async (email: string) => {
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/logout`,
+        { email }
       );
 
       console.log(response.data);

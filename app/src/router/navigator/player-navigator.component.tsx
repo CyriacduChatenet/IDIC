@@ -39,12 +39,12 @@ const PlayerNavigator = () => {
       <Tab.Screen
         name="Map"
         component={PlayerMapScreen}
-        options={{ title: "Carte", headerShown: true}}
+        options={{ title: "Carte", headerShown: false}}
       />
       <Tab.Screen
         name="Tickets"
         component={PlayerTicketScreen}
-        options={{ title: "Billets", headerShown: true }}
+        options={{ title: "Billets", headerShown: false }}
       />
       <Tab.Screen
         name="Profile"

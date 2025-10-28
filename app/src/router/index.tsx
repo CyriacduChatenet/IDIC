@@ -1,21 +1,23 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { User } from "../types/user.type";
-import AuthStack from "./stacks/auth.stack";
 import { Permission } from "../enum/permission.enum";
+import AuthStack from "./stacks/auth.stack";
 import PlayerStack from "./stacks/player.stack";
 import ClubStack from "./stacks/club.stack";
-import SponsorStack from "./stacks/sponsor.stack";
+import SponsorStack from "./stacks/sponsor.stack";// 💡 Importez le hook
+import { useAuth } from "../context/authContext";
 
 const Router = () => {
-  // 💡 En réalité, cette valeur viendrait d'un contexte global (ex: AuthContext)
-  // Pour la démonstration de la correction, nous laissons 'null' ici
-  const user: User | null = { permission: Permission.Club } as User | null;
+  // 💡 UTILISATION DU HOOK useAuth
+  const { user } = useAuth();
+
+  // Si 'loading' est vrai, le Provider affichera déjà un spinner.
+  // Le Router ne doit s'occuper que de l'authentification.
 
   // 1. Vérifiez si l'utilisateur est null (non connecté) en premier
   if (!user) {
     return (
       <NavigationContainer>
-        <AuthStack />
+        <AuthStack /> // Affiche Login/Register
       </NavigationContainer>
     );
   }
@@ -30,7 +32,7 @@ const Router = () => {
       ) : user.permission === Permission.Sponsor ? (
         <SponsorStack />
       ) : (
-        // Option de secours au cas où l'utilisateur est connecté mais sans permission reconnue
+        // Si l'utilisateur a une permission inconnue, on le déconnecte (ou AuthStack)
         <AuthStack /> 
       )}
     </NavigationContainer>
