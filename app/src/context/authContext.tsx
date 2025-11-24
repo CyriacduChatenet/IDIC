@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color="#CC6E31" />
         <Text>Vérification de la session...</Text> {/* 💡 Ce texte est correctement dans un composant <Text> */}
       </View>
     );

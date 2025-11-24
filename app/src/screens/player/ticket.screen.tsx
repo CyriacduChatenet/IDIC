@@ -1,47 +1,52 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native"; // 💡 Ajout de SafeAreaView
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
-
 import TicketList from "../../components/ticket/ticket-list.component";
 
 interface PlayerTicketScreenProps {
-    navigation: any;
+  navigation: any;
 }
 
 const PlayerTicketScreen = ({ navigation }: PlayerTicketScreenProps) => {
   return (
-    // 💡 1. Utilisation de SafeAreaView
     <SafeAreaView style={styles.safeArea}>
-      
-      <View style={styles.container}>
-        {/* 💡 2. Ajout d'un titre de page pour le contexte */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.headerTitle}>Mes Tickets d'Événement</Text>
-        
-        <TicketList />
-      </View>
-
+        <View style={styles.ticketListWrapper}>
+          <TicketList />
+        </View>
+      </ScrollView>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
 
+export default PlayerTicketScreen;
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f0f0f0", // 💡 Fond de page neutre
+    backgroundColor: "#f0f0f0", // Fond neutre
   },
-  container: {
-    flex: 1,
-    // Suppression de alignItems: "center" et justifyContent: "center"
-    paddingHorizontal: 15, // Marge latérale pour le contenu
+  scrollContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40, // Espace en bas pour le scroll
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 26,
+    fontWeight: "700",
     color: "#333",
-    marginTop: 10,
-    marginBottom: 20, // Espace sous le titre
+    marginBottom: 20,
+  },
+  ticketListWrapper: {
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });
-
-export default PlayerTicketScreen;

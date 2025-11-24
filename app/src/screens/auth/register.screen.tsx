@@ -5,23 +5,24 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Image,
 } from "react-native";
 
 // ⚠️ Assurez-vous que ce chemin pointe vers votre composant de formulaire d'inscription
-import RegistrationForm from "../../components/auth/register-form.component"; 
+import RegistrationForm from "../../components/auth/register-form.component";
 
 // Renommé en RegisterScreen pour plus de clarté
 const RegisterScreen = ({ navigation }: any) => {
-  
-  // Gestionnaire pour naviguer vers la page de connexion
-  const handleGoToLogin = () => {
-    // ⚠️ Remplacez 'Login' par le nom de l'écran de connexion dans votre Stack Navigator
-    navigation.navigate('Login'); 
-  };
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Image
+            source={require("../../../assets/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={styles.title}>Créer un Compte</Text>
         <Text style={styles.subtitle}>Inscrivez-vous pour commencer</Text>
 
@@ -38,13 +39,22 @@ const RegisterScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#ffff",
   },
   container: {
     flex: 1,
     paddingHorizontal: 30,
     justifyContent: "center",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#fff",
+  },
+  header: {
+    alignItems: 'center'
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 10,
+    borderRadius: 100,
   },
   title: {
     fontSize: 32,
@@ -68,10 +78,10 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   linkText: {
-    color: "#007AFF",
+    color: "#CC6E31",
     fontWeight: "600",
     textDecorationLine: "underline",
-  }
+  },
 });
 
 export default RegisterScreen;

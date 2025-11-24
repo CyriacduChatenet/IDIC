@@ -33,7 +33,7 @@ const TicketItem = ({ name, address, date, qrcode, style }: TicketItemProps) => 
         <View style={styles.detailColumn}>
             {/* Alignement Icône/Texte : Date & Heure */}
             <View style={styles.labelRow}> 
-                <Ionicons name="calendar-outline" size={16} color="#007AFF" />
+                <Ionicons name="calendar-outline" size={16} color="#CC6E31" />
                 <Text style={styles.label}>Date & Heure</Text>
             </View>
             <Text style={[styles.value, {marginTop: 5}]}>{formattedDate}</Text>
@@ -161,12 +161,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 5,
-    backgroundColor: '#007AFF15', 
+    backgroundColor: '#CC6E3115', 
   },
   statusText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#CC6E31',
   },
   
   // --- Section QR Code ---

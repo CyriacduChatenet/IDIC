@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "app",
+    "name": "SportAccess",
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "extra": {
       "stripePublishableKey": "process.env.EXPO_PUBLIC_STRIPE_PUBLIC_KEY"
     },
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

@@ -62,9 +62,10 @@ export class AuthService {
         );
       }
 
+      // Correction ici: Utilisation de l'opérateur de non-nullité '!'
       const updatedUser = await this.createRoleEntityAndUpdateUser(
         strapiUser.id,
-        registerDto,
+        { ...registerDto, permission: +registerDto.permission! },
         stripeCustomer.id,
       );
 
@@ -152,7 +153,7 @@ export class AuthService {
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
-          permission: dto.permission,
+          permission: +dto.permission,
           player: `${player.data.id}`,
         });
         return updatedUser.data;
@@ -167,7 +168,7 @@ export class AuthService {
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
-          permission: dto.permission,
+          permission: +dto.permission,
           club: `${club.data.id}`,
         });
         return updatedUser.data;
@@ -183,7 +184,7 @@ export class AuthService {
 
         const updatedUser = await this.userService.update(userId, {
           stripe_customer_id: stripeCustomerId,
-          permission: dto.permission,
+          permission: +dto.permission,
           sponsor: `${sponsor.data.id}`,
         });
         return updatedUser.data;

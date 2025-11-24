@@ -13,12 +13,8 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
-
-// Assurez-vous que ce chemin est correct
-import { formStyles } from "../../styles/form.style";
 import EventService from "../../services/event.service";
 
-// --- TYPES ET INTERFACES (inchangées) ---
 interface CreateEventFormData {
   name: string;
   date: Date;
@@ -31,11 +27,9 @@ interface CreateEventFormProps {
   navigation: any;
 }
 
-// --- LOGIQUE DU COMPOSANT (inchangée) ---
-
 const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
   const [loading, setLoading] = useState(false);
-  const [showPicker, setShowPicker] = useState<"date" | "time" | null>(null);
+  const [showPicker, setShowPicker] = useState<"date" | null>(null);
 
   const eventService = new EventService();
 
@@ -58,7 +52,6 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
   const onSubmit = async (data: CreateEventFormData) => {
     if (loading) return;
     setLoading(true);
-
     try {
       await eventService.create({
         name: data.name,
@@ -70,7 +63,6 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
         team_size: +data.team_size,
         club: "m3g6vgzl61fiq1354w1mt08j",
       });
-
       Alert.alert("Succès", "Événement créé avec succès !");
       reset();
       navigation.goBack();
@@ -90,10 +82,7 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
       "Annuler la création",
       "Êtes-vous sûr de vouloir annuler et perdre les modifications ?",
       [
-        {
-          text: "Non",
-          style: "cancel",
-        },
+        { text: "Non", style: "cancel" },
         {
           text: "Oui",
           onPress: () => {
@@ -103,61 +92,6 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
         },
       ]
     );
-  };
-
-  // --- FONCTION DE RENDU D'INPUT SIMPLE (inchangée) ---
-  const renderInput = (
-    name: keyof Omit<CreateEventFormData, "date">,
-    placeholder: string,
-    keyboardType: "default" | "email-address" | "numeric" = "default",
-    multiline: boolean = false
-  ) => (
-    <View style={formStyles.inputGroup} key={name}>
-      <Controller
-        control={control}
-        name={name}
-        rules={{ required: `${placeholder} est requis.` }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={[
-              formStyles.input,
-              multiline && styles.textArea,
-              errors[name] && formStyles.inputError,
-            ]}
-            placeholder={placeholder}
-            placeholderTextColor="#888"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            keyboardType={keyboardType}
-            multiline={multiline}
-            numberOfLines={multiline ? 4 : 1}
-            textAlignVertical={multiline ? "top" : "center"}
-          />
-        )}
-      />
-      {errors[name] && (
-        <Text style={formStyles.errorText}>{errors[name]?.message}</Text>
-      )}
-    </View>
-  );
-
-  // --- LOGIQUE ET RENDU DU DATE/TIME PICKER (inchangée) ---
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (Platform.OS === "android") {
-      setShowPicker(null);
-    }
-    if (selectedDate) {
-      setValue("date", selectedDate, { shouldValidate: true });
-    }
-  };
-
-  const handlePickerOpen = () => {
-    if (Platform.OS === "ios") {
-      setShowPicker("date");
-    } else {
-      setShowPicker("date");
-    }
   };
 
   const selectedDateValue = control._fields.date
@@ -170,19 +104,58 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
       )}`
     : "Sélectionnez date et heure";
 
+  const handlePickerOpen = () => setShowPicker("date");
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (Platform.OS === "android") setShowPicker(null);
+    if (selectedDate) setValue("date", selectedDate, { shouldValidate: true });
+  };
+
+  const renderInput = (
+    name: keyof Omit<CreateEventFormData, "date">,
+    label: string,
+    keyboardType: "default" | "numeric" = "default",
+    multiline: boolean = false
+  ) => (
+    <View style={styles.inputGroup} key={name}>
+      <Text style={styles.label}>{label}</Text>
+      <Controller
+        control={control}
+        name={name}
+        rules={{ required: `${label} est requis.` }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={[
+              styles.input,
+              multiline && styles.textArea,
+              errors[name] && styles.inputError,
+            ]}
+            placeholder={label}
+            placeholderTextColor="#AAA"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            keyboardType={keyboardType}
+            multiline={multiline}
+            numberOfLines={multiline ? 4 : 1}
+            textAlignVertical={multiline ? "top" : "center"}
+          />
+        )}
+      />
+      {errors[name] && (
+        <Text style={styles.errorText}>{errors[name]?.message}</Text>
+      )}
+    </View>
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {renderInput("name", "Nom de l'événement")}
-        {renderInput(
-          "description",
-          "Description de l'événement",
-          "default",
-          true
-        )}
+        {renderInput("description", "Description", "default", true)}
 
-        {/* 3. Date et Heure (inchangée) */}
-        <View style={formStyles.inputGroup}>
+        {/* Date Picker */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Date et Heure</Text>
           <Controller
             control={control}
             name="date"
@@ -190,33 +163,23 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
             render={() => (
               <>
                 <TouchableOpacity
-                  style={[
-                    formStyles.input,
-                    errors.date && formStyles.inputError,
-                    styles.dateInput,
-                  ]}
+                  style={styles.dateInput}
                   onPress={handlePickerOpen}
                 >
                   <Ionicons
                     name="calendar-outline"
                     size={20}
-                    color="#007AFF"
+                    color="#CC6E31"
                     style={{ marginRight: 10 }}
                   />
-                  <Text
-                    style={{
-                      color: selectedDateValue ? "#333" : "#888",
-                      flex: 1,
-                    }}
-                  >
+                  <Text style={{ color: selectedDateValue ? "#111" : "#AAA" }}>
                     {dateDisplay}
                   </Text>
                 </TouchableOpacity>
-
                 {showPicker && (
                   <DateTimePicker
                     value={selectedDateValue || new Date()}
-                    mode={"datetime"}
+                    mode="datetime"
                     display={Platform.OS === "ios" ? "spinner" : "default"}
                     is24Hour={true}
                     onChange={handleDateChange}
@@ -226,45 +189,32 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
             )}
           />
           {errors.date && (
-            <Text style={formStyles.errorText}>{errors.date.message}</Text>
+            <Text style={styles.errorText}>{errors.date.message}</Text>
           )}
         </View>
 
         {renderInput("address", "Adresse")}
-        {renderInput(
-          "team_size",
-          "Taille de l'équipe / Max. Participants",
-          "numeric"
-        )}
+        {renderInput("team_size", "Taille de l'équipe / Max. Participants", "numeric")}
 
-        {/* 6. Boutons de Soumission et d'Annulation (STYLE AMÉLIORÉ) */}
+        {/* Boutons */}
         <View style={styles.buttonRow}>
-          {/* Bouton Annuler (Secondaire : Bordure + Texte Bleu) */}
           <TouchableOpacity
-            style={[
-              formStyles.button, // Pour l'héritage du padding et borderRadius
-              styles.cancelButton,
-            ]}
+            style={styles.cancelButton}
             onPress={handleCancel}
             disabled={loading}
           >
             <Text style={styles.cancelText}>Annuler</Text>
           </TouchableOpacity>
 
-          {/* Bouton Créer (Principal : Fond Bleu) */}
           <TouchableOpacity
-            style={[
-              formStyles.button,
-              styles.submitButton,
-              loading && formStyles.buttonDisabled,
-            ]}
+            style={[styles.submitButton, loading && styles.buttonDisabled]}
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={formStyles.buttonText}>Créer</Text>
+              <Text style={styles.submitText}>Créer</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -273,55 +223,97 @@ const CreateEventForm = ({ navigation }: CreateEventFormProps) => {
   );
 };
 
-// --- STYLESHEET DU COMPOSANT ---
+export default CreateEventForm;
 
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    padding: 0,
   },
   container: {
     width: "100%",
     alignSelf: "center",
   },
-  buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 25,
-    marginBottom: 20,
+  inputGroup: {
+    marginBottom: 15,
   },
-  submitButton: {
-    flex: 1,
-    marginLeft: 10,
-    marginTop: 0,
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#555",
+    marginBottom: 5,
   },
-  // 💡 NOUVEAU STYLE ANNULER
-  cancelButton: {
-    flex: 1,
-    marginRight: 10,
-    marginTop: 25,
-    marginBottom: 20,
-    // Suppression du fond gris et utilisation d'une bordure
-    backgroundColor: "transparent",
-    borderWidth: 1.5, // Bordure légèrement plus épaisse pour la visibilité
-    borderColor: "#007AFF", // Bordure de la couleur principale
-  },
-  // 💡 NOUVEAU TEXTE ANNULER (de la couleur principale)
-  cancelText: {
-    color: "#007AFF", // Texte de la couleur principale (Bleu)
-    fontSize: 18,
-    fontWeight: "bold",
+  input: {
+    backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    fontSize: 16,
+    color: "#111",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   textArea: {
     height: 100,
-    paddingTop: 10,
+    textAlignVertical: "top",
+  },
+  inputError: {
+    borderColor: "#FF3B30",
+    borderWidth: 1,
+  },
+  errorText: {
+    color: "#FF3B30",
+    fontSize: 13,
+    marginTop: 3,
   },
   dateInput: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
+    padding: 12,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 25,
+  },
+  cancelButton: {
+    flex: 1,
+    marginRight: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: "#CC6E31",
+    backgroundColor: "transparent",
+    alignItems: "center",
+  },
+  cancelText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#CC6E31",
+  },
+  submitButton: {
+    flex: 1,
+    marginLeft: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: "#CC6E31",
+    alignItems: "center",
+  },
+  submitText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
 });
-
-export default CreateEventForm;

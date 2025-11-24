@@ -25,11 +25,11 @@ class AuthService {
   };
 
   public register = async (data: RegisterDto) => {
-    console.log("register", data);
+    console.log('register', data);
     try {
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/register`,
-        data
+        data.permission === `${Permission.Club}` ? {...data, name: data.username, role:2, permission: Permission.Club} : data.permission === `${Permission.Player}` ? {...data, role:2, permission: Permission.Player} : {...data, role:2}
       );
 
       console.log(response.data);
@@ -74,7 +74,7 @@ class AuthService {
     try {
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/api/v1/auth/logout`,
-        { email }
+        {email }
       );
 
       console.log(response.data);

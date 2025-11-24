@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     },
     loginLink: {
         marginTop: 20,
-        color: "#007AFF",
+        color: "#CC6E31",
         fontSize: 14,
         textAlign: "center",
         textDecorationLine: "underline",

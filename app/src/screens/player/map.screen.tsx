@@ -9,7 +9,6 @@ interface PlayerMapScreenProps {
 const PlayerMapScreen = ({ navigation }: PlayerMapScreenProps) => {
   return (
     <View style={styles.container}>
-      {/* <Text>Map view!</Text> */}
       <Map />
       <StatusBar style="auto" />
     </View>

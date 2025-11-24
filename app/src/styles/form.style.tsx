@@ -27,13 +27,13 @@ export const formStyles = StyleSheet.create({
     marginTop: -15, // Remonte le message pour qu'il soit plus près du champ
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#CC6E31",
     height: 50,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-    shadowColor: "#007AFF",
+    shadowColor: "#CC6E31",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // 💡 Ajout des icônes
+import { Ionicons } from "@expo/vector-icons";
 import dateFormat from "../../utils/date-format.util";
 
 interface EventItemProps {
@@ -16,75 +16,83 @@ const EventItem = ({ name, date, address, id, navigation }: EventItemProps) => {
 
   return (
     <TouchableOpacity
-      style={styles.cardContainer} // Applique le style de carte ici
-      onPress={() => navigation.navigate("EventDetail", { id: id })}
-      activeOpacity={0.7} // Réduction de l'opacité au toucher
+      style={styles.card}
+      onPress={() => navigation.navigate("EventDetail", { id })}
+      activeOpacity={0.85}
     >
       <View style={styles.cardContent}>
-        {/* 1. NOM DE L'ÉVÉNEMENT (Titre principal) */}
+
+        {/* Titre de l'événement */}
         <Text style={styles.eventName}>{name}</Text>
-        
-        {/* 2. CONTENEUR DES INFOS (Date & Adresse) */}
-        <View style={styles.infoContainer}>
-            
-          {/* 2a. Date */}
-          <View style={styles.detailRow}>
-            <Ionicons name="calendar-outline" size={16} color="#007AFF" />
-            <Text style={styles.detailText}>{formattedDate}</Text>
+
+        {/* Infos */}
+        <View style={styles.infoSection}>
+
+          {/* Date */}
+          <View style={styles.infoRow}>
+            <Ionicons name="calendar-outline" size={18} color="#6F6F6F" />
+            <Text style={styles.infoText}>{formattedDate}</Text>
           </View>
-            
-          {/* 2b. Adresse */}
-          <View style={styles.detailRow}>
-            <Ionicons name="location-outline" size={16} color="#333" />
-            <Text style={styles.detailText}>{address}</Text>
+
+          {/* Adresse */}
+          <View style={styles.infoRow}>
+            <Ionicons name="location-outline" size={18} color="#6F6F6F" />
+            <Text style={styles.infoText}>{address}</Text>
           </View>
-          
+
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-// --- STYLESHEET ---
+export default EventItem;
+
+/* ---------------- APPLE STYLES ---------------- */
+
 const styles = StyleSheet.create({
-  cardContainer: {
-    // 💡 Style de la carte : fond, marges et ombres
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    marginVertical: 8,
-    // Ombre légère pour effet de profondeur (iOS)
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    marginBottom: 16,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+
+    // Ombre douce façon Apple
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    // Élévation pour Android
-    elevation: 3, 
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
   },
+
   cardContent: {
-    padding: 15,
+    padding: 18,
   },
+
   eventName: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333333',
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#111",
     marginBottom: 10,
   },
-  infoContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // Espacement entre date et adresse
-    paddingTop: 5,
+
+  infoSection: {
     borderTopWidth: 1,
-    borderTopColor: '#f0f0f0', // Séparateur subtil
+    borderTopColor: "#E5E5EA",
+    paddingTop: 12,
+    gap: 8,
   },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  detailText: {
-    marginLeft: 5,
-    fontSize: 14,
-    color: '#555',
+
+  infoText: {
+    marginLeft: 8,
+    fontSize: 15,
+    color: "#444",
+    fontWeight: "500",
   },
 });
-
-export default EventItem;

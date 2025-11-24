@@ -1,66 +1,63 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
-import { useStripePayment } from '../../hooks/payment.hook'; // Assurez-vous que ce chemin est correct
-import { Ionicons } from "@expo/vector-icons"; 
+// Assurez-vous que ce chemin est correct dans votre projet
+import { useStripePayment } from '../../hooks/payment.hook'; 
+// Remplacement temporaire d'icône pour la compilation
+// Dans un projet React Native réel, utilisez : import { Ionicons } from "@expo/vector-icons"; 
 
-// --- DONNÉES DES PLANS (Mettez vos vrais IDs de prix Stripe ici) ---
+// --- COMPONENT PROPS ---
+interface PaymentScreenProps {
+  // Prop required to handle navigation to the login page
+  onLoginRequired: () => void; 
+}
+
+// --- PLAN DATA (Replace with your actual Stripe price IDs) ---
 const PAYMENT_PLANS = [
   {
     id: 'monthly',
-    title: 'Abonnement Mensuel',
-    price: '9,99 €',
-    duration: 'par mois',
-    description: 'Accès illimité pour un paiement récurrent.',
-    isSubscription: true,
-    priceId: 'price_mensuel_stripe_id', // Remplacez par votre Price ID Stripe
+    title: 'Achat unique',
+    price: '39,99 €',
+    duration: 'le tournoi',
+    description: 'Accès pour créer un tournoi',
+    isSubscription: false,
+    priceId: 'price_mensuel_stripe_id',
+    amountCents: 3990, // Replace with your Stripe Price ID
   },
   {
     id: 'annual',
     title: 'Abonnement Annuel',
     price: '99,99 €',
-    duration: 'par an (Économisez 20 €!)',
+    duration: 'par an',
     description: 'Le meilleur rapport qualité-prix. Facturation annuelle.',
     isSubscription: true,
-    priceId: 'price_annuel_stripe_id', // Remplacez par votre Price ID Stripe
-  },
-  {
-    id: 'one-time',
-    title: 'Accès Illimité (Achat Unique)',
-    price: '249,00 €',
-    duration: 'Paiement en une seule fois',
-    description: 'Accès à vie sans récurrence.',
-    isSubscription: false,
-    amountCents: 24900, // Montant en centimes pour le paiement unique
-  },
+    priceId: 'price_annuel_stripe_id', // Replace with your Stripe Price ID
+  }
 ];
 
-const PaymentScreen = () => {
-  // 💡 Note : Votre hook useStripePayment doit être capable de gérer les deux cas (paiement unique et abonnement)
-  // J'ai simulé l'appel à la fonction openPaymentSheet pour un montant fixe pour l'exemple
+const PaymentScreen: React.FC<PaymentScreenProps> = ({ onLoginRequired }) => {
   
-  // Utilisation simplifiée pour le paiement unique de l'exemple (249.00 EUR)
+  // Use useStripePayment, passing onLoginRequired as the success function
   const { loading: paymentLoading, openPaymentSheet } = useStripePayment(
-      PAYMENT_PLANS[2].amountCents as number, 
-      'eur'
+      PAYMENT_PLANS[0].amountCents as number, 
+      'eur',
+      onLoginRequired // <-- NOW PASSED AS onSUCCESS CALLBACK
   ); 
 
-  // 💡 SIMULATION : Fonction pour ouvrir la sheet d'abonnement (à décommenter/implémenter dans le hook)
+  // 💡 SIMULATION: Function to open subscription sheet
   const openSubscriptionSheet = (priceId: string) => {
-      // const { openSubscriptionSheet } = useStripeSubscription(priceId);
       console.log(`Tentative d'abonnement pour le plan : ${priceId}`);
-      // REMPLACER PAR VOTRE LOGIQUE D'ABONNEMENT RÉELLE
-      // Exemple : openSubscriptionSheet(priceId);
-      alert(`Simulation: Lancement de l'abonnement ${priceId}`);
+      // REPLACE WITH YOUR ACTUAL SUBSCRIPTION LOGIC
+      alert(`Simulation: Launching subscription ${priceId}`);
+      // NOTE: If subscription is successful, you should also call onLoginRequired here
   }
 
-  // Fonction de gestion du clic
-  const handlePlanSelection = (plan: any) => {
+  // Click handler function
+  const handlePlanSelection = (plan: typeof PAYMENT_PLANS[0]) => {
     if (plan.isSubscription) {
       openSubscriptionSheet(plan.priceId);
     } else {
+      // The openPaymentSheet function will call onLoginRequired internally on success
       openPaymentSheet();
-      // Si vous aviez plusieurs paiements uniques, vous feriez :
-      // openPaymentSheet(plan.amountCents, 'eur');
     }
   };
 
@@ -97,15 +94,17 @@ const PaymentScreen = () => {
                         ) : (
                             <Text style={styles.actionText}>Payer en 1 fois</Text>
                         )}
-                         <Ionicons name="arrow-forward-outline" size={20} color="#007AFF" />
+                        {/* Replacement of the icon with a simple text arrow (>) to avoid import error */}
+                        <Text style={styles.arrowIcon}>&gt;</Text> 
                     </View>
                 </TouchableOpacity>
             ))}
 
-            {/* Indicateur de chargement global pour le paiement unique */}
+
+            {/* Global loading indicator for the single payment */}
             {paymentLoading && (
                 <View style={styles.loadingOverlay}>
-                    <ActivityIndicator size="large" color="#007AFF" />
+                    <ActivityIndicator size="large" color="#CC6E31" />
                     <Text style={styles.loadingText}>Préparation du paiement...</Text>
                 </View>
             )}
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
   planTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#007AFF', // Couleur d'accentuation
+    color: '#CC6E31', // Accent color
   },
   planDescription: {
     fontSize: 14,
@@ -195,18 +194,36 @@ const styles = StyleSheet.create({
   actionText: {
       fontSize: 16,
       fontWeight: '600',
-      color: '#007AFF',
+      color: '#CC6E31',
+  },
+  arrowIcon: { // New style for the workaround arrow icon
+    fontSize: 20,
+    color: '#CC6E31',
+    fontWeight: 'bold',
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 12,
   },
   loadingText: {
       marginTop: 10,
       fontSize: 16,
-      color: '#007AFF',
+      color: '#CC6E31',
+  },
+  // STYLES FOR THE LOGIN BUTTON
+  loginButton: {
+    marginTop: 30,
+    paddingVertical: 15,
+    alignItems: 'center',
+  },
+  loginText: {
+    fontSize: 16,
+    color: '#CC6E31',
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   }
 });
 

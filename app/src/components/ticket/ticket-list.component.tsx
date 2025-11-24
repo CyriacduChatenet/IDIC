@@ -45,7 +45,7 @@ const TicketList = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color="#CC6E31" />
         <Text style={styles.loadingText}>Chargement des tickets...</Text>
       </View>
     );
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#007AFF',
+    color: '#CC6E31',
   },
   emptyText: {
     fontSize: 18,

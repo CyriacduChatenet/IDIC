@@ -28,7 +28,7 @@ const ClubNavigator = () => {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         // Styles conservés
-        tabBarActiveTintColor: "#007AFF",
+        tabBarActiveTintColor: "#CC6E31",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: { paddingBottom: 5, paddingTop: 5, height: 60 },
         headerStyle: { backgroundColor: "#f0f0f0" },

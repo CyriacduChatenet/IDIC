@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useStripe } from '@stripe/stripe-react-native';
 
-export const useStripePayment = (amount: number, currency: string = 'eur') => {
+// Ajout d'une prop 'onSuccess' pour gérer les actions post-paiement (comme la redirection)
+export const useStripePayment = (
+    amount: number, 
+    currency: string = 'eur',
+    onSuccess?: () => void // <-- NOUVEAU PARAMÈTRE OPTIONNEL
+  ) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -10,6 +15,7 @@ export const useStripePayment = (amount: number, currency: string = 'eur') => {
   useEffect(() => {
     const initializePaymentSheet = async () => {
       try {
+        // Cette URL doit être sécurisée et accessible
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_API_URL}/api/v1/stripe/intent`,
           {
@@ -68,6 +74,11 @@ export const useStripePayment = (amount: number, currency: string = 'eur') => {
     } else {
       Alert.alert('Success', 'Payment complete!');
       console.log('✅ Payment succeeded');
+      
+      // >>> APPEL DE LA FONCTION DE SUCCÈS ICI <<<
+      if (onSuccess) {
+        onSuccess();
+      }
     }
   };
 
